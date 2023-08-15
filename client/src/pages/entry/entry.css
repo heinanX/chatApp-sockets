@@ -1,16 +1,18 @@
 .entry--div {
-    background-color: aliceblue;
+    background-color: rgba(240, 248, 255, 0.82);
     width: 50%;
     height: 50%;
-    opacity: 0.82;
+    /* opacity: 0.82; */
     border-radius: 5px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    /* justify-content: center; */
 
-    padding: 2em;
+    padding-top: 2em;
+    padding-bottom: 2em;
     box-shadow: 2px 5px 2px rgba(70, 48, 70, 0.358);
 }
 
@@ -35,8 +37,8 @@
 }
 
 .enter--btn {
-    background-color: rgb(82, 71, 148);
-    color: pink;
+    background-color: #895e98;
+    /* color: pink; */
     height: 3em;
     width: 10rem;
     margin-top: 1rem;
@@ -45,5 +47,5 @@
 }
 
 .enter--btn:hover {
-    background-color: rgb(119, 73, 166);
+    background-color: #6d4b79;
 }

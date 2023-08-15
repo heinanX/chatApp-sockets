@@ -1,8 +1,8 @@
-import Entry from "./pages/entry/entry"
+import Main from "./components/Main/Main"
 
 const App = () => {
   return (
-    <Entry />
+    <Main />
   )
 }
 
