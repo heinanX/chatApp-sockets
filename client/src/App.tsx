@@ -1,8 +1,8 @@
-
+import Entry from "./pages/entry/entry"
 
 const App = () => {
   return (
-    <div>App</div>
+    <Entry />
   )
 }
 

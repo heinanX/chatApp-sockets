@@ -1,0 +1,49 @@
+.entry--div {
+    background-color: aliceblue;
+    width: 50%;
+    height: 50%;
+    opacity: 0.82;
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+    padding: 2em;
+    box-shadow: 2px 5px 2px rgba(70, 48, 70, 0.358);
+}
+
+.entry--div > h1 {
+    font-size: 40pt;
+}
+.entry--div > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.user--input {
+    height: 2.5em;
+    border: none;
+    border-bottom: 2px solid purple;
+    border-left: 2px solid purple;
+    border-top: 2px solid rgb(190, 137, 190);
+    border-right: 2px solid rgb(190, 137, 190);
+    padding: 2px 1em;
+}
+
+.enter--btn {
+    background-color: rgb(82, 71, 148);
+    color: pink;
+    height: 3em;
+    width: 10rem;
+    margin-top: 1rem;
+    border-radius: 10px;
+    border: none;
+}
+
+.enter--btn:hover {
+    background-color: rgb(119, 73, 166);
+}
