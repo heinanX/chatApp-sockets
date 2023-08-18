@@ -1,4 +1,4 @@
-.entry--div {
+.logIn--div {
     background-color: rgba(240, 248, 255, 0.82);
     width: 50%;
     height: 50%;
@@ -16,10 +16,10 @@
     box-shadow: 2px 5px 2px rgba(70, 48, 70, 0.358);
 }
 
-.entry--div > h1 {
+.logIn--div > h1 {
     font-size: 40pt;
 }
-.entry--div > div {
+.logIn--div > div {
     display: flex;
     flex-direction: column;
     align-items: center;
