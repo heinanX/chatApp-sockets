@@ -53,5 +53,11 @@
 /* "Lobby" blir bold */
 .roomList div:first-child {
     font-weight: bold;
+    font-size: larger;
+  }
+
+  .currentRoom {
+    color: #804772;
+    background-color: #80477225;
   }
 
