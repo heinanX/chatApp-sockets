@@ -13,6 +13,24 @@ const io = new Server(server, {
 
 app.use(cors())
 
-io.on("connection", (socket) => console.log("New client connected:" + socket.id))
+//connectar client till socket
+io.on("connection", (socket) => {
+
+    console.log("New client connected:" + socket.id)
+
+
+
+
+
+
+
+
+
+    // Lyssnar på "disconnect" händelsen och logga när en användare har kopplat ifrån
+    socket.on("disconnect", () => {
+        console.log(socket.id + " has disconnected");
+    });
+
+})
 
 server.listen(3000, () => console.log("server is up and running"))

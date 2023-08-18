@@ -1,0 +1,9 @@
+.leaveLobby--btn {
+    padding: 4px;
+    background-color: #895e98;
+    border: none;
+}
+
+.leaveLobby--btn:hover {
+    background-color: #6d4b79;
+}
