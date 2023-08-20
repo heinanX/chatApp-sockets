@@ -9,7 +9,7 @@ const LogIn = () => {
     <div className='logIn--div'>
       <h1>chatDeFudgeApp</h1>
       <div>
-        <p>Vad ar ditt namn, beach?</p>
+        <p>Beach, ge mig ett namn!</p>
         <input
           className='user--input'
           type="text"

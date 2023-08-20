@@ -1,9 +1,13 @@
-import React from 'react'
+import LeftPanel from "../../components/LeftPanel/LeftPanel"
+import RightPanel from "../../components/RightPanel/RightPanel"
 import "./Chat.css"
 
 const Chat = () => {
   return (
-    <div>Chat</div>
+    <div className="chat">
+      <LeftPanel />
+      <RightPanel />
+    </div>
   )
 }
 
