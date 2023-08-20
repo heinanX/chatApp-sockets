@@ -96,6 +96,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     const leaveRoom = (room: string | null) => {
         socket.emit("leave_room", room);
+        socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
     }
 
     // kör joinRoom() när currentRoom sätts

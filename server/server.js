@@ -43,6 +43,7 @@ socket.on("leave_room", (roomName) => {
     socket.leave(roomName)
     activeRooms.delete(roomName) // <-------------- denna kan vi använda när rummet är tomt
     console.log("Du lämnar rum", roomName );
+    socket.emit("left_room", roomName);
 })
 
 
