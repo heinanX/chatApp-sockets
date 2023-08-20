@@ -1,0 +1,19 @@
+.chatroom-top{
+    height: 5%;
+    border-radius: 5px;
+    border: 3px solid black;
+    color: purple;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.exit-chatroom{
+    border: none;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: hotpink;
+
+}
