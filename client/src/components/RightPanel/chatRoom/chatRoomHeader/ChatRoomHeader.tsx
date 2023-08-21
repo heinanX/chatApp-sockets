@@ -1,8 +1,8 @@
 import "./ChatRoomHeader.css"
 import { useSocket } from '../../../../Context/SocketContext/SocketContext'
-import { ChatRoomProps } from "../../../../utils/interfaces"
+import { IChatRoomProps } from "../../../../utils/interfaces"
 
-function ChatRoomHeader({ roomName }: ChatRoomProps) {
+function ChatRoomHeader({ roomName }: IChatRoomProps) {
 
     const { leaveRoom, setCurrentRoom, joinRoom, currentRoom } = useSocket()
 

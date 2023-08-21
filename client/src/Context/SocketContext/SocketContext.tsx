@@ -16,6 +16,12 @@ interface SocketContextData {
     setRoomsList: React.Dispatch<React.SetStateAction<[]>>
     leaveLobby: () => void
     leaveRoom: (room: string | null) => void
+
+    message: string
+    setMessage: React.Dispatch<React.SetStateAction<string>>
+    messages: string[]
+    setMessages: React.Dispatch<React.SetStateAction<string[]>>;
+
 }
 
 // DEFAULTVALUES
@@ -32,7 +38,12 @@ const defaultValues = {
     roomsList: [],
     setRoomsList: () => { },
     leaveLobby: () => { },
-    leaveRoom: () => { }
+    leaveRoom: () => { },
+
+    message: "",
+    setMessage: () => { },
+    messages: [],
+    setMessages: () => { },
 }
 
 // Skapar socket Context
@@ -52,6 +63,9 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const [currentRoom, setCurrentRoom] = useState<string>("")
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [roomsList, setRoomsList] = useState<[]>([]);
+
+    const [message, setMessage] = useState<string>("");
+    const [messages, setMessages] = useState<string[]>([]);
 
     // Loggin function för landningssidan som även startar kopplingen till socket
     const logIn = () => {
@@ -83,6 +97,10 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
 
             })
+
+            socket.on('receiveMessage', (message: string) => {
+                setMessages((prevMessages: string[]) => [...prevMessages, message]);
+              });
         }
     }
 
@@ -106,7 +124,26 @@ export function SocketProvider({ children }: PropsWithChildren) {
     }, [currentRoom]);
 
     return (
-        <SocketContext.Provider value={{ username, setUsername, currentRoom, setCurrentRoom, isLoggedIn, setIsLoggedIn, logIn, joinRoom, roomsList, setRoomsList, leaveLobby, leaveRoom }}>
+        <SocketContext.Provider value={
+            { 
+                username, 
+                setUsername, 
+                currentRoom, 
+                setCurrentRoom, 
+                isLoggedIn, 
+                setIsLoggedIn, 
+                logIn, 
+                joinRoom, 
+                roomsList, 
+                setRoomsList, 
+                leaveLobby, 
+                leaveRoom,
+                message,
+                setMessage,
+                messages,
+                setMessages
+                }
+                }>
             {children}
         </SocketContext.Provider>
     );
