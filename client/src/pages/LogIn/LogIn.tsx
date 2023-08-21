@@ -7,19 +7,21 @@ const LogIn = () => {
 
   return (
     <div className='logIn--div'>
-      <h1>chatDeFudgeApp</h1>
+      <img src="../../../assets/cat.PNG"/>
+      <p>Beach, valj ett namn och borja snacka!</p>
       <div>
-        <p>Beach, ge mig ett namn!</p>
+
         <input
           className='user--input'
           type="text"
-          placeholder='du maste ha ett namn'
+          placeholder='#MyNameIs'
           onChange={(e) => setUsername(e.target.value)} />
+        <button
+          className='enter--btn'
+          onClick={logIn}
+        >Gör din entré</button>
       </div>
-      <button
-        className='enter--btn'
-        onClick={logIn}
-      >Gör din entré</button>
+
     </div>
   )
 }
