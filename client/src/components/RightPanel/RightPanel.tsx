@@ -1,10 +1,11 @@
-import { useSocket } from "../../Context/SocketContext/SocketContext"
 import "./RightPanel.css"
+import ChatRoom from "./chatRoom/ChatRoom"
 
 const RightPanel = () => {
-  const {currentRoom} = useSocket()
   return (
-    <div className="rightPanel">{currentRoom}</div>
+    <div className="rightPanel">
+      <ChatRoom />
+    </div>
   )
 }
 
