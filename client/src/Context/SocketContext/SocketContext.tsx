@@ -20,8 +20,8 @@ interface SocketContextData {
 
     message: string
     setMessage: React.Dispatch<React.SetStateAction<string>>
-    messages: string[]
-    setMessages: React.Dispatch<React.SetStateAction<string[]>>;
+    messages: IRoomMessage[]
+    setMessages: React.Dispatch<React.SetStateAction<IRoomMessage[]>>;
     sendMessage: (message: IRoomMessage) => void
 
 }
@@ -69,7 +69,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const [roomsList, setRoomsList] = useState<[]>([]);
 
     const [message, setMessage] = useState<string>("");
-    const [messages, setMessages] = useState<string[]>([]);
+    const [messages, setMessages] = useState<IRoomMessage[]>([]);
 
     // Loggin function för landningssidan som även startar kopplingen till socket
     const logIn = () => {
@@ -102,10 +102,25 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
             })
 
-            socket.on('receiveMessage', (message: string) => {
-                console.log(`message received: ${message}`);
-                setMessages((prevMessages: string[]) => [...prevMessages, message]);
-                console.log(`Messages are : ${messages}`);
+            socket.on('receiveMessage', (msg: IRoomMessage) => {
+                console.log(`message received: ${msg.message}`);
+
+                console.log(`length of messages: ${messages.length}`);
+
+                for ( const m of messages ) {
+                    console.log(`Messages are : ${m.message} for room: ${m.room}`);
+                }
+                const myArray = [...messages, msg]
+
+                for ( const m of myArray ) {
+                    console.log(`MyArray messages are : ${m.message} for room: ${m.room}`);
+                }
+                setMessages(myArray);
+                for ( const m of messages ) {
+                console.log(`Messages are : ${m.message} for room: ${m.room}`);
+
+                }
+
 
               });
         }

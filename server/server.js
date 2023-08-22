@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('sendMessage', (data) => {
-    io.to(data.room).emit('receiveMessage', data.message);
+    io.to(data.room).emit('receiveMessage', data);
   });
 
   // Lyssnar på "disconnect" händelsen och logga när en användare har kopplat ifrån
