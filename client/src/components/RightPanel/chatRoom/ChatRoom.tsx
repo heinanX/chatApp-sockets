@@ -5,6 +5,7 @@ import "./ChatRoom.css"
 import ChatRoomHeader from "./chatRoomHeader/ChatRoomHeader";
 import ChatRoomBody from "./chatRoomBody/ChatRoomBody";
 import { IRoomMessage } from "../../../utils/interfaces";
+import ChatRoomFooter from "./chatRoomFooter/ChatRoomFooter";
 
 
 function ChatRoom() {
@@ -24,6 +25,7 @@ function ChatRoom() {
                 message={message} 
                 setMessage={setMessage}  
                 />
+            <ChatRoomFooter roomName={currentRoom} />
         </div>
     )
 }

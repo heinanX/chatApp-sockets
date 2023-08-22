@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState, useContext, PropsWithChildren } from 'react';
 import { io } from "socket.io-client";
+import { IRoomMessage } from '../../utils/interfaces';
 
 // INTERFACE
 interface SocketContextData {
@@ -21,6 +22,7 @@ interface SocketContextData {
     setMessage: React.Dispatch<React.SetStateAction<string>>
     messages: string[]
     setMessages: React.Dispatch<React.SetStateAction<string[]>>;
+    sendMessage: (message: IRoomMessage) => void
 
 }
 
@@ -44,6 +46,8 @@ const defaultValues = {
     setMessage: () => { },
     messages: [],
     setMessages: () => { },
+
+    sendMessage: () => { },
 }
 
 // Skapar socket Context
@@ -99,7 +103,10 @@ export function SocketProvider({ children }: PropsWithChildren) {
             })
 
             socket.on('receiveMessage', (message: string) => {
+                console.log(`message received: ${message}`);
                 setMessages((prevMessages: string[]) => [...prevMessages, message]);
+                console.log(`Messages are : ${messages}`);
+
               });
         }
     }
@@ -115,6 +122,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const leaveRoom = (room: string | null) => {
         socket.emit("leave_room", room);
         socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
+    }
+
+    const sendMessage = (message: IRoomMessage) => {
+        console.log(`Sending message ${message.message} to room ${message.room}`);
+        socket.emit("sendMessage", message);
     }
 
     // kör joinRoom() när currentRoom sätts
@@ -141,7 +153,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 message,
                 setMessage,
                 messages,
-                setMessages
+                setMessages,
+                sendMessage
                 }
                 }>
             {children}

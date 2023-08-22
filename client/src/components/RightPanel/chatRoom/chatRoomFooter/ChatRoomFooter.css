@@ -1,0 +1,15 @@
+.chatroom-low{
+    height: 10%;
+    border-radius: 5px;
+    color: darkblue;
+    text-align: left;
+    padding: 5px;
+}
+
+.chatroom-low input{
+    border-radius: 5px;
+    color: darkblue;
+    text-align: left;
+    align-self: baseline;
+    width: 90%;
+}

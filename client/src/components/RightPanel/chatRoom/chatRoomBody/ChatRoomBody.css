@@ -5,4 +5,7 @@
     color: darkblue;
     text-align: left;
     padding: 5px;
+    align-self: baseline;
+    width: 100%;
 }
+

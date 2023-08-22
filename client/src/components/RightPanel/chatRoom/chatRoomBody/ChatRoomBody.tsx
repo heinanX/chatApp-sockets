@@ -1,26 +1,24 @@
-import "./ChatRoomBody.css"
-import { useSocket } from '../../../../Context/SocketContext/SocketContext'
-import { IChatRoomProps } from "../../../../utils/interfaces"
 import { useEffect, useState } from "react";
+import { useSocket } from '../../../../Context/SocketContext/SocketContext';
+import { IChatRoomProps, IRoomMessage } from "../../../../utils/interfaces";
+import "./ChatRoomBody.css";
 
-function ChatRoomBody({ roomName, messages, setMessages, message, setMessage }: IChatRoomProps) {
+function ChatRoomBody({ messages }: IChatRoomProps) {
 
     const { currentRoom } = useSocket()
 
-    const [roomMessages, setRoomMessages] = useState<string[]>([]);
+    const [roomMessages, setRoomMessages] = useState<IRoomMessage[]>([]);
     useEffect(() => {
-        const wantedRoomMessages = []
-            messages && messages.forEach(message => {
-                message.room === currentRoom && wantedRoomMessages.push(message) // Hmmm... ska göra om detta men måste lämna nu
-            });
-      }, [messages]);
-    
+        const wantedRoomMessages: IRoomMessage[] = messages ? messages.filter(message => message.room === currentRoom) : []
+        setRoomMessages(wantedRoomMessages);
+    }, [messages, currentRoom]);
+
     return (
         <div className="chatroom-mid">
             {
-                messages && messages.map((msg, index) => (
+                roomMessages && roomMessages.map((msg, index) => (
                     <p key={index}>{msg.message}</p>
-                  ))
+                ))
             }
         </div>
     )
