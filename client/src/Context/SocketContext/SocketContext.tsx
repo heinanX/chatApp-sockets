@@ -103,26 +103,13 @@ export function SocketProvider({ children }: PropsWithChildren) {
             })
 
             socket.on('receiveMessage', (msg: IRoomMessage) => {
-                console.log(`message received: ${msg.message}`);
-
+                setMessages(prevMessages => [...prevMessages, msg]);
+                console.log(`message received: ${msg.message} from ${msg.room}`);
                 console.log(`length of messages: ${messages.length}`);
-
-                for ( const m of messages ) {
+                for (const m of messages) {
                     console.log(`Messages are : ${m.message} for room: ${m.room}`);
                 }
-                const myArray = [...messages, msg]
-
-                for ( const m of myArray ) {
-                    console.log(`MyArray messages are : ${m.message} for room: ${m.room}`);
-                }
-                setMessages(myArray);
-                for ( const m of messages ) {
-                console.log(`Messages are : ${m.message} for room: ${m.room}`);
-
-                }
-
-
-              });
+            });
         }
     }
 
@@ -152,26 +139,26 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     return (
         <SocketContext.Provider value={
-            { 
-                username, 
-                setUsername, 
-                currentRoom, 
-                setCurrentRoom, 
-                isLoggedIn, 
-                setIsLoggedIn, 
-                logIn, 
-                joinRoom, 
-                roomsList, 
-                setRoomsList, 
-                leaveLobby, 
+            {
+                username,
+                setUsername,
+                currentRoom,
+                setCurrentRoom,
+                isLoggedIn,
+                setIsLoggedIn,
+                logIn,
+                joinRoom,
+                roomsList,
+                setRoomsList,
+                leaveLobby,
                 leaveRoom,
                 message,
                 setMessage,
                 messages,
                 setMessages,
                 sendMessage
-                }
-                }>
+            }
+        }>
             {children}
         </SocketContext.Provider>
     );
