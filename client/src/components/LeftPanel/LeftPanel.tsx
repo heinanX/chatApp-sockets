@@ -11,7 +11,14 @@ const LeftPanel = () => {
   return (
     <div className="leftPanel--div">
       <div>
-        <h4>{username} </h4>
+        <div style={{borderBottom: '2px solid rgb(31, 18, 31)', paddingLeft: '5px'}}>
+        <h4 style={{display: 'inline'}}>Fudgesicles! Inte du #</h4>
+        <h4 style={{display: 'inline', color: 'white'}}>{username}</h4>
+        <h4 style={{display: 'inline'}}> !</h4>
+        </div>
+        <div style={{display:'flex', justifyContent: 'center'}}>
+          <img src="../../../assets/cat.PNG" style={{width: '50%', maxWidth: '330px'}}/>
+        </div>
         <RoomCreator />
         <RoomList />
       </div>
