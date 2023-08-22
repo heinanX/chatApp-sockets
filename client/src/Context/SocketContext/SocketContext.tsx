@@ -72,7 +72,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 if (status === "available") {
                     setIsLoggedIn(true)
                     setCurrentRoom("Lobby")
-                    setOldRoom("Lobby")
+                    
                 } else {
                     alert('Anvandare redan tagen');
                 }})
@@ -90,11 +90,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.off("active_rooms");
 
             // Skickar en händelse till servern för att ansluta till det valda rummet
-            socket.emit("join_room", currentRoom, oldRoom, username);
+            socket.emit("join_room", currentRoom, oldRoom, username, setOldRoom);
 
             // kopplar på "active_rooms" för att uppdatera rumslistan
-            socket.on("active_rooms", (roomsList) => {
-                //console.log(roomInfo);
+            socket.on("active_rooms", (roomsList, roomInfo) => {
+                console.log(roomInfo);
                 
                 setRoomsList(roomsList)
                 console.log(roomsList)

@@ -39,21 +39,27 @@ io.on("connection", (socket) => {
     });
 
     // Ansluter användaren till det specificerade rummet
-    socket.on("join_room", (roomName, oldRoom, username) => {
+    socket.on("join_room", (roomName, oldRoom, username, setOldRoom) => {
         socket.join(roomName);
+
+        if (!roomInfo[roomName]) { roomInfo[roomName] = [] }
+
+        if (!oldRoom == "") {
+            const index = roomInfo[oldRoom].indexOf(username)
+            roomInfo[oldRoom].splice(index, 1);
+            console.log("oldroom",oldRoom);
+            if (oldRoom != "Lobby" && roomInfo[oldRoom].length === 0) {
+                console.log('inne');
+                delete roomInfo[oldRoom]
+            }
+        }
         
-        if (!roomInfo[roomName]) {
-            roomInfo[roomName] = []
-        } 
-    
-        //const index = roomInfo[oldRoom].indexOf(username)
-        //roomInfo[oldRoom].splice(index, 1)
-        
+
 
         roomInfo[roomName].push(username)
-
+        setOldRoom(roomName)
         console.log(roomInfo)
-        console.log(oldRoom);
+       
         // console.log("User: " + username +  "joined room: " + roomName);
 
         // Lägger till det joinade rummet i listan med aktiva rum
