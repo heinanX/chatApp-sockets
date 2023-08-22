@@ -6,8 +6,10 @@ interface SocketContextData {
 
     username: string | null
     setUsername: React.Dispatch<React.SetStateAction<string>>
-    currentRoom: string | null
+    currentRoom: string
     setCurrentRoom: React.Dispatch<React.SetStateAction<string>>
+    oldRoom: string | null
+    setOldRoom: React.Dispatch<React.SetStateAction<string>>
     isLoggedIn: boolean
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
     logIn: () => void
@@ -25,6 +27,8 @@ const defaultValues = {
     setUsername: () => { },
     currentRoom: "",
     setCurrentRoom: () => { },
+    oldRoom: "",
+    setOldRoom: () => { },
     isLoggedIn: false,
     setIsLoggedIn: () => { },
     logIn: () => { },
@@ -50,17 +54,32 @@ export function SocketProvider({ children }: PropsWithChildren) {
     // STATES
     const [username, setUsername] = useState<string>("")
     const [currentRoom, setCurrentRoom] = useState<string>("")
+    const [oldRoom, setOldRoom] = useState<string>("")
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [roomsList, setRoomsList] = useState<[]>([]);
 
-    // Loggin function för landningssidan som även startar kopplingen till socket
-    const logIn = () => {
+
+
+    // Login function för landningssidan som även startar kopplingen till socket
+    const logIn =  () => {
         if (username) {
+            // Connectar till servern
             socket.connect()
-            setIsLoggedIn(true)
-            setCurrentRoom("Lobby")
+            // Kollar om username finns i "activeUsers" på servern
+            socket.emit("checkUsername", username);
+            // Nar servern skickar statuskoden pa username, sa satts lobbyn och inloggad status, eller en alert att namn redan taget
+            socket.on("usernameStatus", (status) => {
+                if (status === "available") {
+                    setIsLoggedIn(true)
+                    setCurrentRoom("Lobby")
+                    
+                } else {
+                    alert('Anvandare redan tagen');
+                }})
+
         } else {
             alert("Du måste ha ett namn")
+
         }
     }
     // tidigare createRoom, nu joinroom, då createroom inte behövs eftersom man joinar när man skapar ett rum)
@@ -71,15 +90,18 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.off("active_rooms");
 
             // Skickar en händelse till servern för att ansluta till det valda rummet
-            socket.emit("join_room", currentRoom);
+            socket.emit("join_room", currentRoom, oldRoom, username, setOldRoom);
 
             // kopplar på "active_rooms" för att uppdatera rumslistan
             socket.on("active_rooms", (roomsList) => {
+                
+                
                 setRoomsList(roomsList)
+                console.log("i context",roomsList)
 
                 // consoler som syns i webbläsaren
-                console.log("Rumlista: ", roomsList);
-                console.log("Du är i detta rummet: ", currentRoom);
+                //console.log("Rumlista: ", roomsList);
+                //console.log("Du är i detta rummet: ", currentRoom);
 
 
             })
@@ -106,7 +128,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     }, [currentRoom]);
 
     return (
-        <SocketContext.Provider value={{ username, setUsername, currentRoom, setCurrentRoom, isLoggedIn, setIsLoggedIn, logIn, joinRoom, roomsList, setRoomsList, leaveLobby, leaveRoom }}>
+        <SocketContext.Provider value={{ username, setUsername, currentRoom, setCurrentRoom, oldRoom, setOldRoom, isLoggedIn, setIsLoggedIn, logIn, joinRoom, roomsList, setRoomsList, leaveLobby, leaveRoom }}>
             {children}
         </SocketContext.Provider>
     );
