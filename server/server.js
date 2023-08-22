@@ -21,12 +21,10 @@ activeRooms.add("Lobby")
 
 const activeUsers = new Map();
 
-const roomInfo = {}
+const roomList = new Map()
 
 //connectar client till socket
 io.on("connection", (socket) => {
-
-    // console.log("New client connected:" + socket.id)
 
     // Kollar om username finns och skickar tillbaka status "available" eller "inUse" till clienten
     socket.on("checkUsername", (username) => {
@@ -38,37 +36,43 @@ io.on("connection", (socket) => {
         }
     });
 
-    // Ansluter användaren till det specificerade rummet
+    // Ansluter användaren till det specifika rummet
     socket.on("join_room", (roomName, oldRoom, username, setOldRoom) => {
         socket.join(roomName);
 
-        if (!roomInfo[roomName]) { roomInfo[roomName] = [] }
-
+        if (!roomList.has(roomName)) { roomList.set(roomName, []) }
+        
         if (!oldRoom == "") {
-            const index = roomInfo[oldRoom].indexOf(username)
-            roomInfo[oldRoom].splice(index, 1);
-            console.log("oldroom",oldRoom);
-            if (oldRoom != "Lobby" && roomInfo[oldRoom].length === 0) {
-                console.log('inne');
-                delete roomInfo[oldRoom]
+            const oldRoomArray = roomList.get(oldRoom);
+            const index = oldRoomArray.indexOf(username)
+            if (index !== -1) {
+                oldRoomArray.splice(index, 1);
+                //console.log("oldroom", oldRoom);
+                if (oldRoom != "Lobby" && oldRoomArray.length === 0) {
+                    roomList.delete(oldRoom)
+                }
             }
         }
-        
 
-
-        roomInfo[roomName].push(username)
+        const roomArray = roomList.get(roomName);
+        roomArray.push(username)
+        roomList.set(roomName, roomArray)
         setOldRoom(roomName)
-        console.log(roomInfo)
-       
+
+
+        roomList.forEach((usernames, roomNames) => {
+            console.log(`Room: ${roomNames}, Users: ${usernames.join(", ")}`);
+        });
+
         // console.log("User: " + username +  "joined room: " + roomName);
 
         // Lägger till det joinade rummet i listan med aktiva rum
-        activeRooms.add(roomName)
+        
         // Skickar ut uppdaterad lista på "activeRooms" till alla klienter
-        io.emit("active_rooms", Array.from(activeRooms), roomInfo)
+        io.emit("active_rooms", Array.from(roomList))
         console.log(activeUsers);
         // Logg som syns i terminalen
-        console.log(io.sockets.adapter.rooms.has(activeUsers.values()))
+        //console.log(io.sockets.adapter.rooms.has(activeUsers.values()))
 
     });
 

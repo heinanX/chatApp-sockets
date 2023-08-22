@@ -93,11 +93,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.emit("join_room", currentRoom, oldRoom, username, setOldRoom);
 
             // kopplar på "active_rooms" för att uppdatera rumslistan
-            socket.on("active_rooms", (roomsList, roomInfo) => {
-                console.log(roomInfo);
+            socket.on("active_rooms", (roomsList) => {
+                
                 
                 setRoomsList(roomsList)
-                console.log(roomsList)
+                console.log("i context",roomsList)
 
                 // consoler som syns i webbläsaren
                 //console.log("Rumlista: ", roomsList);
