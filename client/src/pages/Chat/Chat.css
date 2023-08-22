@@ -1,8 +1,7 @@
 .chat {
     height: 84%;
     width: 90%;
+    max-width: 1300px;
     display: flex;
     flex-direction: row;
-/*     justify-content: center;
-    align-items: center; */
 }

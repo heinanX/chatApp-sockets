@@ -6,15 +6,28 @@ import "./roomCreator.css"
 const RoomCreator = () => {
     const { setCurrentRoom } = useSocket()
    const [value, setValue] = useState("")
-    
+
+   const createRoom = () => {
+    setCurrentRoom(value)
+    setValue('')
+  }
+
+   const enterKey = (e: React.KeyboardEvent<HTMLDivElement>) => {    
+    if (e.key == 'Enter') {
+      createRoom()
+    }
+
+  }
   return (
      <div className="roomCreator">
     <input 
-     
-     onChange={(e) => setValue(e.target.value)}
-    placeholder= "skapa rum" type="text" />
+      value={value}
+      onKeyDown={(e) => enterKey(e)}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder= "skapa rum" type="text"
+    />
     <button
-    onClick={() => setCurrentRoom(value)}>+</button>
+    onClick={createRoom}>+</button>
 </div>
   )
 }
