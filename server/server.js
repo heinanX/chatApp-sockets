@@ -1,7 +1,8 @@
 const express = require("express")
 const cors = require("cors")
 const http = require("http") //http är inbyggt i node
-const {Server} = require("socket.io");
+const { Server } = require("socket.io");
+const { log } = require("console");
 
 const app = express();
 const server = http.createServer(app)
@@ -18,33 +19,60 @@ const activeRooms = new Set();
 //Lägger in "Lobby" by default
 activeRooms.add("Lobby")
 
+const activeUsers = new Map();
+
+const roomInfo = {}
+
 //connectar client till socket
 io.on("connection", (socket) => {
 
-    console.log("New client connected:" + socket.id)
+    // console.log("New client connected:" + socket.id)
+
+    // Kollar om username finns och skickar tillbaka status "available" eller "inUse" till clienten
+    socket.on("checkUsername", (username) => {
+        if (!activeUsers.has(username)) {
+            socket.emit("usernameStatus", "available")
+            activeUsers.set(username, socket.id)
+        } else {
+            socket.emit("usernameStatus", "inUse")
+        }
+    });
 
     // Ansluter användaren till det specificerade rummet
-    socket.on("join_room", (roomName) => {
-        socket.join(roomName); 
-        console.log("User with Id: " + socket.id + " joined room: " + roomName);
+    socket.on("join_room", (roomName, oldRoom, username) => {
+        socket.join(roomName);
+        
+        if (!roomInfo[roomName]) {
+            roomInfo[roomName] = []
+        } 
+    
+        //const index = roomInfo[oldRoom].indexOf(username)
+        //roomInfo[oldRoom].splice(index, 1)
+        
+
+        roomInfo[roomName].push(username)
+
+        console.log(roomInfo)
+        console.log(oldRoom);
+        // console.log("User: " + username +  "joined room: " + roomName);
 
         // Lägger till det joinade rummet i listan med aktiva rum
         activeRooms.add(roomName)
         // Skickar ut uppdaterad lista på "activeRooms" till alla klienter
-        io.emit("active_rooms", Array.from(activeRooms))
-
+        io.emit("active_rooms", Array.from(activeRooms), roomInfo)
+        console.log(activeUsers);
         // Logg som syns i terminalen
-        console.log(io.sockets.adapter.rooms);
+        console.log(io.sockets.adapter.rooms.has(activeUsers.values()))
 
     });
 
-// lssnar på "leave_room" (kanske inte behövs, vi får se...) 
-socket.on("leave_room", (roomName) => {
-    socket.leave(roomName)
-    activeRooms.delete(roomName) // <-------------- denna kan vi använda när rummet är tomt
-    console.log("Du lämnar rum", roomName );
-    socket.emit("left_room", roomName);
-})
+    // lssnar på "leave_room" (kanske inte behövs, vi får se...) 
+    socket.on("leave_room", (roomName) => {
+        socket.leave(roomName)
+        activeRooms.delete(roomName) // <-------------- denna kan vi använda när rummet är tomt
+        console.log("Du lämnar rum", roomName);
+        socket.emit("left_room", roomName);
+    })
 
 
 
