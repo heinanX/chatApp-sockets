@@ -99,19 +99,13 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 console.log("Rumlista: ", roomsList);
                 console.log("Du är i detta rummet: ", currentRoom);
 
-
             })
 
-            socket.on('receiveMessage', (msg: IRoomMessage) => {
-                setMessages(prevMessages => [...prevMessages, msg]);
-                console.log(`message received: ${msg.message} from ${msg.room}`);
-                console.log(`length of messages: ${messages.length}`);
-                for (const m of messages) {
-                    console.log(`Messages are : ${m.message} for room: ${m.room}`);
-                }
-            });
+
         }
     }
+
+
 
     // LeavLobbyfunktionen som körs från commponenten LeaveLobbyBtn
     const leaveLobby = () => {
@@ -126,16 +120,35 @@ export function SocketProvider({ children }: PropsWithChildren) {
         socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
     }
 
-    const sendMessage = (message: IRoomMessage) => {
-        console.log(`Sending message ${message.message} to room ${message.room}`);
-        socket.emit("sendMessage", message);
-    }
+
 
     // kör joinRoom() när currentRoom sätts
     useEffect(() => {
         joinRoom()
 
+        const messageListener = (msg: IRoomMessage) => {
+            setMessages(prevMessages => [...prevMessages, msg]);
+            console.log(`message received: ${msg.message} from ${msg.room}`);
+            console.log(`length of messages: ${messages.length}`);
+            for (const m of messages) {
+                console.log(`Messages are : ${m.message} for room: ${m.room}`);
+            }
+        };
+
+        socket.on('receiveMessage', messageListener);
+
+        return () => {
+            socket.off('receiveMessage', messageListener);
+        };
     }, [currentRoom]);
+
+
+
+
+    const sendMessage = (message: IRoomMessage) => {
+        console.log(`Sending message ${message.message} to room ${message.room}`);
+        socket.emit("sendMessage", message);
+    }
 
     return (
         <SocketContext.Provider value={

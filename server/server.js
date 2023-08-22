@@ -34,6 +34,14 @@ io.on("connection", (socket) => {
 
     // Logg som syns i terminalen
     console.log(io.sockets.adapter.rooms);
+
+    const clientsInRoom = io.sockets.adapter.rooms.get(roomName);
+    
+    if (clientsInRoom) {
+      const clients = Array.from(clientsInRoom);
+      console.log(`Clients in room ${roomName}:`, clients);
+    }
+
   });
 
   // lssnar på "leave_room" (kanske inte behövs, vi får se...)
