@@ -46,18 +46,26 @@
 
 .roomList {
     background-color: aliceblue;
-    padding: 1em 5px;
+    padding: 1em 0;
     max-height: 500px;
 /*     overflow-y: scroll; */
 }
-.roomList div {
-    padding-left: 5px;
+.roomList ul > li {
+    padding-bottom: 5px;
 }
 
-.roomList div:not(:first-child):hover {
-    background-color: rgb(177, 179, 209);
+.roomList ul > li > p {
+    font-size: small;
+    padding-left: 10px;
 }
-.roomList div:hover {
+.roomList ul > li > p:hover {
+    cursor: default;
+}
+.roomList ul > li > h3 {
+    padding-left: 5px;
+}
+.roomList ul > li > h3:hover {
+    background-color: rgb(177, 179, 209);
     cursor: pointer;
     border-radius: 1px;
 }
@@ -71,5 +79,7 @@
   .currentRoom {
     color: #804772;
     background-color: #80477225;
+    border-radius: 2px;
+    padding: 0 5px;
   }
 

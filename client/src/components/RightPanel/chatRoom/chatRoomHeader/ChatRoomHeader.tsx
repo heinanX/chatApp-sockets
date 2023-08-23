@@ -11,9 +11,11 @@ function ChatRoomHeader({ roomName }: ChatRoomProps) {
         setCurrentRoom("Lobby")
         joinRoom()
     }
+    
+
     return (
-        <div className="chatroom-top">
-            {roomName}
+        <div className="chatroom-header">
+            <p>{roomName}</p>
             {
                 // Vi render ut leave chat-knappen bara om man inte är i lobbyn eftersom vi har en leave lobby-knapp
                 currentRoom !== "Lobby" && <div><button onClick={leaveRoomHandler} className="exit-chatroom">ⓧ</button></div>

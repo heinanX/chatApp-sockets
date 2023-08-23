@@ -1,4 +1,10 @@
 .chatroom {
     height: 100%;
+    height: 70%;
+    background-size: contain;
+    opacity: 0.3;
+}
+
+.lobbyBG {
 
 }

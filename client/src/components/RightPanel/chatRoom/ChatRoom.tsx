@@ -7,9 +7,10 @@ import ChatroomBody from "./ChatroomBody/ChatroomBody";
 
 function ChatRoom() {
     const { currentRoom } = useSocket()
+    const cond = currentRoom == 'Lobby' ?  "url(../../../../assets/lobby.png)" : "none"
 
     return (
-        <div className="chatroom">
+        <div className="chatroom" style={{backgroundImage: cond}}>
             <ChatRoomHeader roomName={currentRoom} />
             <ChatroomBody />
         </div>
