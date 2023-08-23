@@ -17,7 +17,7 @@ interface SocketContextData {
     roomsList: string[]
     setRoomsList: React.Dispatch<React.SetStateAction<[]>>
     leaveLobby: () => void
-    leaveRoom: (room: string | null) => void
+    leaveRoom: (room: string) => void
 }
 
 // DEFAULTVALUES
@@ -90,20 +90,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.off("active_rooms");
 
             // Skickar en händelse till servern för att ansluta till det valda rummet
-            socket.emit("join_room", currentRoom, oldRoom, username, setOldRoom);
-
+            socket.emit("join_room", currentRoom, username, oldRoom, setOldRoom);
+            
             // kopplar på "active_rooms" för att uppdatera rumslistan
-            socket.on("active_rooms", (roomsList) => {
-                
-                
-                setRoomsList(roomsList)
-                console.log("i context",roomsList)
-
-                // consoler som syns i webbläsaren
-                //console.log("Rumlista: ", roomsList);
-                //console.log("Du är i detta rummet: ", currentRoom);
-
-
+            socket.on("active_rooms", (rooms) => {
+                setRoomsList(rooms);
             })
         }
     }
@@ -116,7 +107,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     }
 
-    const leaveRoom = (room: string | null) => {
+    const leaveRoom = (room: string, ) => {
         socket.emit("leave_room", room);
         socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
     }

@@ -2,7 +2,6 @@ const express = require("express")
 const cors = require("cors")
 const http = require("http") //http är inbyggt i node
 const { Server } = require("socket.io");
-const { log } = require("console");
 
 const app = express();
 const server = http.createServer(app)
@@ -21,7 +20,9 @@ activeRooms.add("Lobby")
 
 const activeUsers = new Map();
 
-const roomList = new Map()
+const socketToUsername = [];
+
+const roomInfo = {};
 
 //connectar client till socket
 io.on("connection", (socket) => {
@@ -37,42 +38,28 @@ io.on("connection", (socket) => {
     });
 
     // Ansluter användaren till det specifika rummet
-    socket.on("join_room", (roomName, oldRoom, username, setOldRoom) => {
+    socket.on("join_room", (roomName, username, oldRoom, setOldRoom) => {
         socket.join(roomName);
 
-        if (!roomList.has(roomName)) { roomList.set(roomName, []) }
-        
+        if (!roomInfo[roomName]) { roomInfo[roomName] = [] }
+
         if (!oldRoom == "") {
-            const oldRoomArray = roomList.get(oldRoom);
-            const index = oldRoomArray.indexOf(username)
-            if (index !== -1) {
-                oldRoomArray.splice(index, 1);
-                //console.log("oldroom", oldRoom);
-                if (oldRoom != "Lobby" && oldRoomArray.length === 0) {
-                    roomList.delete(oldRoom)
+            const index = roomInfo[oldRoom].indexOf(username)
+            if (index != -1){
+                roomInfo[oldRoom].splice(index, 1);
+                if (oldRoom != "Lobby" && roomInfo[oldRoom].length === 0) {
+                    delete roomInfo[oldRoom]
                 }
             }
         }
-
-        const roomArray = roomList.get(roomName);
-        roomArray.push(username)
-        roomList.set(roomName, roomArray)
+        roomInfo[roomName].push(username)
         setOldRoom(roomName)
+        console.log(roomInfo)
+        io.emit("active_rooms", roomInfo)
 
 
-        roomList.forEach((usernames, roomNames) => {
-            console.log(`Room: ${roomNames}, Users: ${usernames.join(", ")}`);
-        });
-
-        // console.log("User: " + username +  "joined room: " + roomName);
-
-        // Lägger till det joinade rummet i listan med aktiva rum
-        
         // Skickar ut uppdaterad lista på "activeRooms" till alla klienter
-        io.emit("active_rooms", Array.from(roomList))
-        console.log(activeUsers);
-        // Logg som syns i terminalen
-        //console.log(io.sockets.adapter.rooms.has(activeUsers.values()))
+       // io.emit("active_rooms", )
 
     });
 
