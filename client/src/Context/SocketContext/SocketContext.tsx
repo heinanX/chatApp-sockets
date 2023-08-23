@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 // INTERFACE
 interface SocketContextData {
 
-    username: string | null
+    username: string
     setUsername: React.Dispatch<React.SetStateAction<string>>
     currentRoom: string
     setCurrentRoom: React.Dispatch<React.SetStateAction<string>>
@@ -17,7 +17,7 @@ interface SocketContextData {
     roomsList: string[]
     setRoomsList: React.Dispatch<React.SetStateAction<[]>>
     leaveLobby: () => void
-    leaveRoom: (room: string) => void
+    leaveRoom: (oldRoom: string, username: string) => void
 }
 
 // DEFAULTVALUES
@@ -86,6 +86,10 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const joinRoom = () => {
 
         if (username !== "" && currentRoom !== "") {
+
+            if (oldRoom !== "") {
+                leaveRoom(oldRoom, username);
+            }
             // stänger av lyssnaren på "active_rooms" medans vi joinar rum för att inte useEffecten ska köras flera gånger.
             socket.off("active_rooms");
 
@@ -96,6 +100,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.on("active_rooms", (rooms) => {
                 setRoomsList(rooms);
             })
+
+            
         }
     }
 
@@ -107,11 +113,18 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     }
 
-    const leaveRoom = (room: string, ) => {
-        socket.emit("leave_room", room);
-        socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
+    const leaveRoom = (oldRoom: string, username: string ) => {
+        console.log('im in here');
+        
+        socket.emit("leave_room", oldRoom, username)
     }
 
+    useEffect(() => {
+        // Attach the event listener for "left_room" event here
+        socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
+
+        // ... rest of the code
+    }, []);
     // kör joinRoom() när currentRoom sätts
     useEffect(() => {
         joinRoom()

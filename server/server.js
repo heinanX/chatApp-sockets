@@ -20,8 +20,6 @@ activeRooms.add("Lobby")
 
 const activeUsers = new Map();
 
-const socketToUsername = [];
-
 const roomInfo = {};
 
 //connectar client till socket
@@ -43,7 +41,17 @@ io.on("connection", (socket) => {
 
         if (!roomInfo[roomName]) { roomInfo[roomName] = [] }
 
-        if (!oldRoom == "") {
+
+        roomInfo[roomName].push(username)
+        setOldRoom(roomName)
+        console.log(roomInfo)
+        io.emit("active_rooms", roomInfo)
+
+    });
+
+    // lssnar på "leave_room" (kanske inte behövs, vi får se...) 
+    socket.on("leave_room", (oldRoom, username) => {
+        if (!oldRoom == "" && username && oldRoom) {
             const index = roomInfo[oldRoom].indexOf(username)
             if (index != -1){
                 roomInfo[oldRoom].splice(index, 1);
@@ -52,23 +60,8 @@ io.on("connection", (socket) => {
                 }
             }
         }
-        roomInfo[roomName].push(username)
-        setOldRoom(roomName)
-        console.log(roomInfo)
         io.emit("active_rooms", roomInfo)
-
-
-        // Skickar ut uppdaterad lista på "activeRooms" till alla klienter
-       // io.emit("active_rooms", )
-
-    });
-
-    // lssnar på "leave_room" (kanske inte behövs, vi får se...) 
-    socket.on("leave_room", (roomName) => {
-        socket.leave(roomName)
-        activeRooms.delete(roomName) // <-------------- denna kan vi använda när rummet är tomt
-        console.log("Du lämnar rum", roomName);
-        socket.emit("left_room", roomName);
+        io.emit("left_room", oldRoom)
     })
 
 
