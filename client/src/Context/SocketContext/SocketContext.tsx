@@ -108,23 +108,21 @@ export function SocketProvider({ children }: PropsWithChildren) {
     // LeavLobbyfunktionen som körs från commponenten LeaveLobbyBtn
     const leaveLobby = () => {
         socket.disconnect()
+        socket.emit("disconnect_user", username)
+        leaveRoom(currentRoom, username)
         setIsLoggedIn(false)
         console.log("Hej då!");
 
     }
 
     const leaveRoom = (oldRoom: string, username: string ) => {
-        console.log('im in here');
-        
         socket.emit("leave_room", oldRoom, username)
     }
 
     useEffect(() => {
-        // Attach the event listener for "left_room" event here
         socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
-
-        // ... rest of the code
     }, []);
+    
     // kör joinRoom() när currentRoom sätts
     useEffect(() => {
         joinRoom()

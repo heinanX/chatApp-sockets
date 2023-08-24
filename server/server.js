@@ -2,6 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const http = require("http") //http är inbyggt i node
 const { Server } = require("socket.io");
+const { log } = require("console");
 
 const app = express();
 const server = http.createServer(app)
@@ -44,13 +45,15 @@ io.on("connection", (socket) => {
 
         roomInfo[roomName].push(username)
         setOldRoom(roomName)
-        console.log(roomInfo)
+        console.log('on join',io.sockets.adapter.rooms)
         io.emit("active_rooms", roomInfo)
 
     });
 
     // lssnar på "leave_room" (kanske inte behövs, vi får se...) 
     socket.on("leave_room", (oldRoom, username) => {
+        socket.leave(oldRoom)
+        console.log('on leave',io.sockets.adapter.rooms)
         if (!oldRoom == "" && username && oldRoom) {
             const index = roomInfo[oldRoom].indexOf(username)
             if (index != -1){
@@ -61,6 +64,7 @@ io.on("connection", (socket) => {
             }
         }
         io.emit("active_rooms", roomInfo)
+        console.log('this is after you have left',roomInfo);
         io.emit("left_room", oldRoom)
     })
 
@@ -71,7 +75,13 @@ io.on("connection", (socket) => {
     // Lyssnar på "disconnect" händelsen och logga när en användare har kopplat ifrån
     socket.on("disconnect", () => {
         console.log(socket.id + " has disconnected");
+
     });
+    socket.on('disconnect_user', (username) => {
+        console.log('before ', activeUsers);
+        activeUsers.delete(username)
+        console.log('after ', activeUsers);
+    })
 
 })
 
