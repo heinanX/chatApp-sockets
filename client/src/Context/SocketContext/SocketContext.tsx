@@ -102,7 +102,6 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.on("active_rooms", (rooms) => {
                 setRoomsList(rooms);
             })
-
             
         }
     }
@@ -120,13 +119,9 @@ export function SocketProvider({ children }: PropsWithChildren) {
     }
 
     const leaveRoom = (oldRoom: string, username: string ) => {
-        socket.emit("leave_room", oldRoom, username, setOldRoom)
+        socket.emit("leave_room", oldRoom, username)
     }
 
-    // useEffect(() => {
-    //     socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
-    // }, []);
-    
     // kör joinRoom() när currentRoom sätts
     useEffect(() => {
         joinRoom()

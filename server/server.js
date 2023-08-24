@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
     if (!activeUsers.has(username)) {
       socket.emit("usernameStatus", "available");
       activeUsers.set(username, socket.id);
+      console.log(username + " with ID: " + socket.id + " joined chat!");
     } else {
       socket.emit("usernameStatus", "inUse");
     }
@@ -38,16 +39,20 @@ io.on("connection", (socket) => {
   // Ansluter användaren till det specifika rummet
   socket.on("join_room", (roomName, username, oldRoom, setOldRoom) => {
     socket.join(roomName);
-
+    console.log(username + " with ID: " + socket.id + " joined " + roomName);
+    // Om roomName inte finns i roomInfo så skapas roomName med en tom array
     if (!roomInfo[roomName]) roomInfo[roomName] = [];
 
+    // Lägger till username till rummet man ansluter till 
     roomInfo[roomName].push(username);
+    // sätter oldroom till rumsnamnet man lämnar
     setOldRoom(roomName);
-    console.log("on join", io.sockets.adapter.rooms);
+    // skickar roomInfo till clienten
     io.emit("active_rooms", roomInfo);
   });
 
-  const removeRoomInfo = (username, oldRoom, setOldRoom) => {
+  // Funktion som tar bort rum/ username från rum, körs i "leave_room" och "disconnect_user"
+  const removeRoomInfo = (username, oldRoom) => {
     if (!oldRoom == "" && username && oldRoom) {
       const index = roomInfo[oldRoom].indexOf(username);
       if (index != -1) {
@@ -57,38 +62,24 @@ io.on("connection", (socket) => {
         }
       }
     }
-
+    // Skickar ny info till clienten
     io.emit("active_rooms", roomInfo);
-    console.log("this is after you have left", roomInfo);
-    // io.emit("left_room", oldRoom);
-    console.log(`${username} lämnade rum ${oldRoom}`);
+    
   };
 
-  // lssnar på "leave_room" (kanske inte behövs, vi får se...)
-  socket.on("leave_room", (oldRoom, username, setOldRoom) => {
+  // lssnar på "leave_room" på clienten och kör removeRoomInfo funktionen
+  socket.on("leave_room", (oldRoom, username) => {
     socket.leave(oldRoom);
-    console.log("on leave", io.sockets.adapter.rooms);
-    removeRoomInfo(username, oldRoom, setOldRoom);
-    // if (!oldRoom == "" && username && oldRoom) {
-    //     const index = roomInfo[oldRoom].indexOf(username)
-    //     if (index != -1){
-    //         roomInfo[oldRoom].splice(index, 1);
-    //         if (oldRoom != "Lobby" && roomInfo[oldRoom].length === 0) {
-    //             delete roomInfo[oldRoom]
-    //         }
-    //     }
-    // }
+    console.log( username + " with ID: " + socket.id + " left " + oldRoom);
+    removeRoomInfo(username, oldRoom);
   });
 
+  // lssnar på "disconnect_user" på clienten och kör removeRoomInfo funktionen
   socket.on("disconnect_user", (username, oldRoom) => {
-    console.log("before ", activeUsers);
     activeUsers.delete(username);
-    console.log("after ", activeUsers);
-
     removeRoomInfo(username, oldRoom);
-    console.log("roominfo in disconnectUser: ", roomInfo);
-
-    console.log(socket.id + " has disconnected");
+    console.log( username + " with ID: " + socket.id + " has disconnected");
+    // disconnectar från socket
     socket.disconnect();
   });
 });

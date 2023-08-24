@@ -15,11 +15,11 @@ const RoomList = () => {
         {Object.entries(roomsList).map(([roomName, users]) => (
           <li key={roomName} className={currentRoom === roomName ? 'currentRoom' : ''}
           onClick={() => {setCurrentRoom(roomName)}}>
-            <h3>{roomName}</h3>
-            <ul>
+            <h3 className='roomList--h3'>{roomName}</h3>
+            <ul className='participants'>
             {Array.isArray(users) ? (
               users.map((user, index) => (
-                <p key={index}>{user}</p>
+                <li key={index}>{user}</li>
               ))
             ) : (
               <p>No users in this room</p>
