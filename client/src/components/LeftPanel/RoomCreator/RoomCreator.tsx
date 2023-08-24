@@ -7,8 +7,11 @@ const RoomCreator = () => {
     const { setCurrentRoom } = useSocket()
    const [value, setValue] = useState("")
 
+   // sätter currentRoom om inputfält inte är en tom ""
    const createRoom = () => {
+    if ( value == "") alert("Rummet måste ha ett namn!")
     setCurrentRoom(value)
+  // Tömmer inputfältet
     setValue('')
   }
 

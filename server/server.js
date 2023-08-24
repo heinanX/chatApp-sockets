@@ -1,98 +1,87 @@
-const express = require("express")
-const cors = require("cors")
-const http = require("http") //http är inbyggt i node
+const express = require("express");
+const cors = require("cors");
+const http = require("http"); //http är inbyggt i node
 const { Server } = require("socket.io");
 const { log } = require("console");
 
 const app = express();
-const server = http.createServer(app)
+const server = http.createServer(app);
 const io = new Server(server, {
-    cors: {
-        origin: "*",
-    }
-})
+  cors: {
+    origin: "*",
+  },
+});
 
-app.use(cors())
+app.use(cors());
 
 // skapar ett set med aktiva rum
 const activeRooms = new Set();
 //Lägger in "Lobby" by default
-activeRooms.add("Lobby")
+activeRooms.add("Lobby");
 
 const activeUsers = new Map();
 
-const roomList = new Map()
+const roomInfo = {};
 
 //connectar client till socket
 io.on("connection", (socket) => {
+  // Kollar om username finns och skickar tillbaka status "available" eller "inUse" till clienten
+  socket.on("checkUsername", (username) => {
+    if (!activeUsers.has(username)) {
+      socket.emit("usernameStatus", "available");
+      activeUsers.set(username, socket.id);
+      console.log(username + " with ID: " + socket.id + " joined chat!");
+    } else {
+      socket.emit("usernameStatus", "inUse");
+    }
+  });
 
-    // Kollar om username finns och skickar tillbaka status "available" eller "inUse" till clienten
-    socket.on("checkUsername", (username) => {
-        if (!activeUsers.has(username)) {
-            socket.emit("usernameStatus", "available")
-            activeUsers.set(username, socket.id)
-        } else {
-            socket.emit("usernameStatus", "inUse")
+  // Ansluter användaren till det specifika rummet
+  socket.on("join_room", (roomName, username, oldRoom, setOldRoom) => {
+    socket.join(roomName);
+    console.log(username + " with ID: " + socket.id + " joined " + roomName);
+    // Om roomName inte finns i roomInfo så skapas roomName med en tom array
+    if (!roomInfo[roomName]) roomInfo[roomName] = [];
+
+    // Lägger till username till rummet man ansluter till 
+    roomInfo[roomName].push(username);
+    // sätter oldroom till rumsnamnet man lämnar
+    setOldRoom(roomName);
+    // skickar roomInfo till clienten
+    io.emit("active_rooms", roomInfo);
+  });
+
+  // Funktion som tar bort rum/ username från rum, körs i "leave_room" och "disconnect_user"
+  const removeRoomInfo = (username, oldRoom) => {
+    if (!oldRoom == "" && username && oldRoom) {
+      const index = roomInfo[oldRoom].indexOf(username);
+      if (index != -1) {
+        roomInfo[oldRoom].splice(index, 1);
+        if (oldRoom != "Lobby" && roomInfo[oldRoom].length === 0) {
+          delete roomInfo[oldRoom];
         }
-    });
+      }
+    }
+    // Skickar ny info till clienten
+    io.emit("active_rooms", roomInfo);
+    
+  };
 
-    // Ansluter användaren till det specifika rummet
-    socket.on("join_room", (roomName, oldRoom, username, setOldRoom) => {
-        socket.join(roomName);
+  // lssnar på "leave_room" på clienten och kör removeRoomInfo funktionen
+  socket.on("leave_room", (oldRoom, username) => {
+    socket.leave(oldRoom);
+    console.log( username + " with ID: " + socket.id + " left " + oldRoom);
+    removeRoomInfo(username, oldRoom);
+  });
 
-        if (!roomList.has(roomName)) { roomList.set(roomName, []) }
-        
-        if (!oldRoom == "") {
-            const oldRoomArray = roomList.get(oldRoom);
-            const index = oldRoomArray.indexOf(username)
-            if (index !== -1) {
-                oldRoomArray.splice(index, 1);
-                //console.log("oldroom", oldRoom);
-                if (oldRoom != "Lobby" && oldRoomArray.length === 0) {
-                    roomList.delete(oldRoom)
-                }
-            }
-        }
+  // lssnar på "disconnect_user" på clienten och kör removeRoomInfo funktionen
+  socket.on("disconnect_user", (username, oldRoom) => {
+    activeUsers.delete(username);
+    removeRoomInfo(username, oldRoom);
+    console.log( username + " with ID: " + socket.id + " has disconnected");
+    // disconnectar från socket
+    socket.disconnect();
+  });
+});
 
-        const roomArray = roomList.get(roomName);
-        roomArray.push(username)
-        roomList.set(roomName, roomArray)
-        setOldRoom(roomName)
-
-
-        roomList.forEach((usernames, roomNames) => {
-            console.log(`Room: ${roomNames}, Users: ${usernames.join(", ")}`);
-        });
-
-        // console.log("User: " + username +  "joined room: " + roomName);
-
-        // Lägger till det joinade rummet i listan med aktiva rum
-        
-        // Skickar ut uppdaterad lista på "activeRooms" till alla klienter
-        io.emit("active_rooms", Array.from(roomList))
-        console.log(activeUsers);
-        // Logg som syns i terminalen
-        //console.log(io.sockets.adapter.rooms.has(activeUsers.values()))
-
-    });
-
-    // lssnar på "leave_room" (kanske inte behövs, vi får se...) 
-    socket.on("leave_room", (roomName) => {
-        socket.leave(roomName)
-        activeRooms.delete(roomName) // <-------------- denna kan vi använda när rummet är tomt
-        console.log("Du lämnar rum", roomName);
-        socket.emit("left_room", roomName);
-    })
-
-
-
-
-
-    // Lyssnar på "disconnect" händelsen och logga när en användare har kopplat ifrån
-    socket.on("disconnect", () => {
-        console.log(socket.id + " has disconnected");
-    });
-
-})
-
-server.listen(3000, () => console.log("server is up and running"))
+server.listen(3000, () => console.log("server is up and running"));

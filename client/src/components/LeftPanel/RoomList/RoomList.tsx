@@ -1,36 +1,33 @@
+import { useEffect } from 'react';
 import { useSocket } from '../../../Context/SocketContext/SocketContext';
 //renderar ut alla rum i listan och sätter onClick på dom
 const RoomList = () => {
-  const { currentRoom, setCurrentRoom, roomsList } = useSocket();
-console.log("Alla rum",roomsList);
+  const { roomsList, setCurrentRoom, currentRoom } = useSocket();
+ //currentRoom, setCurrentRoom, 
+ useEffect(() => {
+  console.log('this is from component 2',roomsList);
+}, [roomsList]);
+
 
   return (
     <div className="roomList">
-
-<ul>
-      {Array.from(roomsList.entries()).map(([key, value]) => (
-        <li key={key}>
-           {value}
-        </li>
-      ))}
-    </ul>
-
-{/* <ul>{roomsList.values()}</ul>
-   <ul>
-      {roomsList.map((roomName) => (
-      
-        <li className={currentRoom === roomName ? 'currentRoom' : ''} onClick={() => {setCurrentRoom(roomName)}} key={roomName}>
-          {roomName}
-        <ul>
-          <li>{roomName}</li>
-        </ul>
-        
-        </li>
-        
-        
-      ))} 
-      </ul> */}
-
+      <ul>
+        {Object.entries(roomsList).map(([roomName, users]) => (
+          <li key={roomName} className={currentRoom === roomName ? 'currentRoom' : ''}
+          onClick={() => {setCurrentRoom(roomName)}}>
+            <h3 className='roomList--h3'>{roomName}</h3>
+            <ul className='participants'>
+            {Array.isArray(users) ? (
+              users.map((user, index) => (
+                <li key={index}>{user}</li>
+              ))
+            ) : (
+              <p>No users in this room</p>
+            )}
+            </ul>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
