@@ -62,6 +62,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     // Login function för landningssidan som även startar kopplingen till socket
     const logIn =  () => {
+        console.log(oldRoom, "in login");
+        
         if (username) {
             // Connectar till servern
             socket.connect()
@@ -107,21 +109,23 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     // LeavLobbyfunktionen som körs från commponenten LeaveLobbyBtn
     const leaveLobby = () => {
-        socket.disconnect()
-        socket.emit("disconnect_user", username)
-        leaveRoom(currentRoom, username)
+        //socket.disconnect()
+        socket.emit("disconnect_user", username, oldRoom)
+        socket.on("active_rooms", (rooms) => {
+            setRoomsList(rooms);
+        })
         setIsLoggedIn(false)
         console.log("Hej då!");
-
+        setCurrentRoom("")
     }
 
     const leaveRoom = (oldRoom: string, username: string ) => {
-        socket.emit("leave_room", oldRoom, username)
+        socket.emit("leave_room", oldRoom, username, setOldRoom)
     }
 
-    useEffect(() => {
-        socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
-    }, []);
+    // useEffect(() => {
+    //     socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
+    // }, []);
     
     // kör joinRoom() när currentRoom sätts
     useEffect(() => {
