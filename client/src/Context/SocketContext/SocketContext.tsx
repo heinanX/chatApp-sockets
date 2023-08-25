@@ -21,9 +21,8 @@ interface SocketContextData {
     message: string
     setMessage: React.Dispatch<React.SetStateAction<string>>
     messages: IRoomMessage[]
-    setMessages: React.Dispatch<React.SetStateAction<IRoomMessage[]>>;
+    setMessages: React.Dispatch<React.SetStateAction<IRoomMessage[]>>
     sendMessage: (message: IRoomMessage) => void
-
 }
 
 // DEFAULTVALUES
@@ -46,7 +45,6 @@ const defaultValues = {
     setMessage: () => { },
     messages: [],
     setMessages: () => { },
-
     sendMessage: () => { },
 }
 
@@ -98,29 +96,21 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 // consoler som syns i webbläsaren
                 console.log("Rumlista: ", roomsList);
                 console.log("Du är i detta rummet: ", currentRoom);
-
             })
-
-
         }
     }
-
-
 
     // LeavLobbyfunktionen som körs från commponenten LeaveLobbyBtn
     const leaveLobby = () => {
         socket.disconnect()
         setIsLoggedIn(false)
         console.log("Hej då!");
-
     }
 
     const leaveRoom = (room: string | null) => {
         socket.emit("leave_room", room);
         socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
     }
-
-
 
     // kör joinRoom() när currentRoom sätts
     useEffect(() => {
@@ -141,9 +131,6 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.off('receiveMessage', messageListener);
         };
     }, [currentRoom]);
-
-
-
 
     const sendMessage = (message: IRoomMessage) => {
         console.log(`Sending message ${message.message} to room ${message.room}`);
