@@ -2,8 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const http = require("http"); //http är inbyggt i node
 const { Server } = require("socket.io");
-const { log } = require("console");
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -62,9 +60,9 @@ io.on("connection", (socket) => {
         }
       }
     }
+    
     // Skickar ny info till clienten
     io.emit("active_rooms", roomInfo);
-    
   };
 
   // lssnar på "leave_room" på clienten och kör removeRoomInfo funktionen
@@ -72,6 +70,11 @@ io.on("connection", (socket) => {
     socket.leave(oldRoom);
     console.log( username + " with ID: " + socket.id + " left " + oldRoom);
     removeRoomInfo(username, oldRoom);
+  });
+  
+  // lyssnar på "send_message" på clienten och kör funktionen
+    socket.on('sendMessage', (data) => {
+    io.to(data.room).emit('receiveMessage', data);
   });
 
   // lssnar på "disconnect_user" på clienten och kör removeRoomInfo funktionen

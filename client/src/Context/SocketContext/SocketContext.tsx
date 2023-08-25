@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState, useContext, PropsWithChildren } from 'react';
 import { io } from "socket.io-client";
+import { IRoomMessage } from '../../utils/interfaces';
 
 // INTERFACE
 interface SocketContextData {
@@ -18,6 +19,14 @@ interface SocketContextData {
     setRoomsList: React.Dispatch<React.SetStateAction<[]>>
     leaveLobby: () => void
     leaveRoom: (oldRoom: string, username: string) => void
+    message: string
+    setMessage: React.Dispatch<React.SetStateAction<string>>
+    messages: IRoomMessage[]
+    setMessages: React.Dispatch<React.SetStateAction<IRoomMessage[]>>
+    sendMessage: (message: IRoomMessage) => void
+
+   
+
 }
 
 // DEFAULTVALUES
@@ -36,7 +45,13 @@ const defaultValues = {
     roomsList: [],
     setRoomsList: () => { },
     leaveLobby: () => { },
-    leaveRoom: () => { }
+    leaveRoom: () => { },
+
+    message: "",
+    setMessage: () => { },
+    messages: [],
+    setMessages: () => { },
+    sendMessage: () => { },
 }
 
 // Skapar socket Context
@@ -57,12 +72,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const [oldRoom, setOldRoom] = useState<string>("")
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [roomsList, setRoomsList] = useState<[]>([]);
-
-
+    const [message, setMessage] = useState<string>("");
+    const [messages, setMessages] = useState<IRoomMessage[]>([]);
 
     // Login function för landningssidan som även startar kopplingen till socket
     const logIn =  () => {
-        console.log(oldRoom, "in login");
         
         if (username) {
             // Connectar till servern
@@ -116,6 +130,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
         setIsLoggedIn(false)
         console.log("Hej då!");
         setCurrentRoom("")
+
     }
 
     const leaveRoom = (oldRoom: string, username: string ) => {
@@ -126,10 +141,52 @@ export function SocketProvider({ children }: PropsWithChildren) {
     useEffect(() => {
         joinRoom()
 
+        const messageListener = (msg: IRoomMessage) => {
+            setMessages(prevMessages => [...prevMessages, msg]);
+            console.log(`message received: ${msg.message} from ${msg.room}`);
+            console.log(`length of messages: ${messages.length}`);
+            for (const m of messages) {
+                console.log(`Messages are : ${m.message} for room: ${m.room}`);
+            }
+        };
+
+        socket.on('receiveMessage', messageListener);
+
+        return () => {
+            socket.off('receiveMessage', messageListener);
+        };
     }, [currentRoom]);
 
+    const sendMessage = (message: IRoomMessage) => {
+        console.log(`Sending message ${message.message} to room ${message.room}`);
+        socket.emit("sendMessage", message);
+    }
+
     return (
-        <SocketContext.Provider value={{ username, setUsername, currentRoom, setCurrentRoom, oldRoom, setOldRoom, isLoggedIn, setIsLoggedIn, logIn, joinRoom, roomsList, setRoomsList, leaveLobby, leaveRoom }}>
+
+        <SocketContext.Provider value={
+            {
+                username,
+                setUsername,
+                currentRoom,
+                setCurrentRoom,
+                oldRoom, 
+                setOldRoom,
+                isLoggedIn,
+                setIsLoggedIn,
+                logIn,
+                joinRoom,
+                roomsList,
+                setRoomsList,
+                leaveLobby,
+                leaveRoom,
+                message,
+                setMessage,
+                messages,
+                setMessages,
+                sendMessage
+            }
+        }>
             {children}
         </SocketContext.Provider>
     );

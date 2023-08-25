@@ -1,0 +1,11 @@
+.chatroom-mid{
+    height: 85%;
+    border-radius: 5px;
+    border: 3px solid black;
+    color: darkblue;
+    text-align: left;
+    padding: 5px;
+    align-self: baseline;
+    width: 100%;
+}
+
