@@ -6,15 +6,31 @@ import "./roomCreator.css"
 const RoomCreator = () => {
     const { setCurrentRoom } = useSocket()
    const [value, setValue] = useState("")
-    
+
+   // sätter currentRoom om inputfält inte är en tom ""
+   const createRoom = () => {
+    if ( value == "") alert("Rummet måste ha ett namn!")
+    setCurrentRoom(value)
+  // Tömmer inputfältet
+    setValue('')
+  }
+
+   const enterKey = (e: React.KeyboardEvent<HTMLDivElement>) => {    
+    if (e.key == 'Enter') {
+      createRoom()
+    }
+
+  }
   return (
      <div className="roomCreator">
     <input 
-     
-     onChange={(e) => setValue(e.target.value)}
-    placeholder= "skapa rum" type="text" />
+      value={value}
+      onKeyDown={(e) => enterKey(e)}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder= "skapa rum" type="text"
+    />
     <button
-    onClick={() => setCurrentRoom(value)}>+</button>
+    onClick={createRoom}>+</button>
 </div>
   )
 }

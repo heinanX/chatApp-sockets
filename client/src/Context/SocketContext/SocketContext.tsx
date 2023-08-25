@@ -5,10 +5,12 @@ import { IRoomMessage } from '../../utils/interfaces';
 // INTERFACE
 interface SocketContextData {
 
-    username: string | null
+    username: string
     setUsername: React.Dispatch<React.SetStateAction<string>>
-    currentRoom: string | null
+    currentRoom: string
     setCurrentRoom: React.Dispatch<React.SetStateAction<string>>
+    oldRoom: string | null
+    setOldRoom: React.Dispatch<React.SetStateAction<string>>
     isLoggedIn: boolean
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
     logIn: () => void
@@ -16,13 +18,15 @@ interface SocketContextData {
     roomsList: string[]
     setRoomsList: React.Dispatch<React.SetStateAction<[]>>
     leaveLobby: () => void
-    leaveRoom: (room: string | null) => void
-
+    leaveRoom: (oldRoom: string, username: string) => void
     message: string
     setMessage: React.Dispatch<React.SetStateAction<string>>
     messages: IRoomMessage[]
     setMessages: React.Dispatch<React.SetStateAction<IRoomMessage[]>>
     sendMessage: (message: IRoomMessage) => void
+
+   
+
 }
 
 // DEFAULTVALUES
@@ -32,6 +36,8 @@ const defaultValues = {
     setUsername: () => { },
     currentRoom: "",
     setCurrentRoom: () => { },
+    oldRoom: "",
+    setOldRoom: () => { },
     isLoggedIn: false,
     setIsLoggedIn: () => { },
     logIn: () => { },
@@ -63,53 +69,72 @@ export function SocketProvider({ children }: PropsWithChildren) {
     // STATES
     const [username, setUsername] = useState<string>("")
     const [currentRoom, setCurrentRoom] = useState<string>("")
+    const [oldRoom, setOldRoom] = useState<string>("")
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [roomsList, setRoomsList] = useState<[]>([]);
-
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<IRoomMessage[]>([]);
 
-    // Loggin function för landningssidan som även startar kopplingen till socket
-    const logIn = () => {
+    // Login function för landningssidan som även startar kopplingen till socket
+    const logIn =  () => {
+        
         if (username) {
+            // Connectar till servern
             socket.connect()
-            setIsLoggedIn(true)
-            setCurrentRoom("Lobby")
+            // Kollar om username finns i "activeUsers" på servern
+            socket.emit("checkUsername", username);
+            // Nar servern skickar statuskoden pa username, sa satts lobbyn och inloggad status, eller en alert att namn redan taget
+            socket.on("usernameStatus", (status) => {
+                if (status === "available") {
+                    setIsLoggedIn(true)
+                    setCurrentRoom("Lobby")
+                    
+                } else {
+                    alert('Anvandare redan tagen');
+                }})
+
         } else {
             alert("Du måste ha ett namn")
+
         }
     }
     // tidigare createRoom, nu joinroom, då createroom inte behövs eftersom man joinar när man skapar ett rum)
     const joinRoom = () => {
 
         if (username !== "" && currentRoom !== "") {
+
+            if (oldRoom !== "") {
+                leaveRoom(oldRoom, username);
+            }
             // stänger av lyssnaren på "active_rooms" medans vi joinar rum för att inte useEffecten ska köras flera gånger.
             socket.off("active_rooms");
 
             // Skickar en händelse till servern för att ansluta till det valda rummet
-            socket.emit("join_room", currentRoom);
-
+            socket.emit("join_room", currentRoom, username, oldRoom, setOldRoom);
+            
             // kopplar på "active_rooms" för att uppdatera rumslistan
-            socket.on("active_rooms", (roomsList) => {
-                setRoomsList(roomsList)
-
-                // consoler som syns i webbläsaren
-                console.log("Rumlista: ", roomsList);
-                console.log("Du är i detta rummet: ", currentRoom);
+            socket.on("active_rooms", (rooms) => {
+                setRoomsList(rooms);
             })
+            
         }
     }
 
     // LeavLobbyfunktionen som körs från commponenten LeaveLobbyBtn
     const leaveLobby = () => {
-        socket.disconnect()
+        //socket.disconnect()
+        socket.emit("disconnect_user", username, oldRoom)
+        socket.on("active_rooms", (rooms) => {
+            setRoomsList(rooms);
+        })
         setIsLoggedIn(false)
         console.log("Hej då!");
+        setCurrentRoom("")
+
     }
 
-    const leaveRoom = (room: string | null) => {
-        socket.emit("leave_room", room);
-        socket.on("left_room", room => console.log(`${username} lämnade rum ${room}`));
+    const leaveRoom = (oldRoom: string, username: string ) => {
+        socket.emit("leave_room", oldRoom, username)
     }
 
     // kör joinRoom() när currentRoom sätts
@@ -138,12 +163,15 @@ export function SocketProvider({ children }: PropsWithChildren) {
     }
 
     return (
+
         <SocketContext.Provider value={
             {
                 username,
                 setUsername,
                 currentRoom,
                 setCurrentRoom,
+                oldRoom, 
+                setOldRoom,
                 isLoggedIn,
                 setIsLoggedIn,
                 logIn,

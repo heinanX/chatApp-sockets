@@ -4,10 +4,10 @@ import { IChatRoomProps } from "../../../../utils/interfaces"
 
 function ChatRoomHeader({ roomName }: IChatRoomProps) {
 
-    const { leaveRoom, setCurrentRoom, joinRoom, currentRoom } = useSocket()
+    const { leaveRoom, setCurrentRoom, joinRoom, currentRoom, username } = useSocket()
 
     const leaveRoomHandler = () => {
-        leaveRoom(roomName)
+        leaveRoom(currentRoom, username)
         setCurrentRoom("Lobby")
         joinRoom()
     }

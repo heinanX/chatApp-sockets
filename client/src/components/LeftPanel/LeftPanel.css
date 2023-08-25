@@ -12,14 +12,7 @@
 .leftPanel--div > div {
     display: flex;
     flex-direction: column;
-
     gap: 1em;
-}
-
-.leftPanel--div > div > h4 {
-    border-bottom: 2px solid rgb(31, 18, 31);
-    padding-bottom: 10px;
-    padding-left: 5px;
 }
 
 .roomCreator {
@@ -42,22 +35,49 @@
     border: none;
     font-size: 20px;
     background-color: rgba(255, 255, 255, 0.319);
-    
+}
+
+.roomCreator button:hover {
+    background-color: rgba(132, 114, 154, 0.319);
+    color: #9d0f7e;
 }
 
 .roomList {
     background-color: aliceblue;
-    padding: 1em 5px;
+    padding: 1em 0;
+    max-height: 300px;
+/*     overflow-y: scroll; */
 }
 
-/* "Lobby" blir bold */
+
+.roomList--h3 {
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+.roomList--h3:hover {
+    background-color: rgb(210, 211, 226);
+    cursor: pointer;
+    border-radius: 1px;
+}
+
 .roomList div:first-child {
     font-weight: bold;
     font-size: larger;
-  }
+}
 
-  .currentRoom {
-    color: #804772;
-    background-color: #80477225;
-  }
+.participants li {
+    font-size: 9pt;
+    padding-left: 10px;
+    border-radius: 3px;
+}
+
+.participants li:hover {
+    cursor: default;
+}
+
+.currentRoom {
+color: #804772;
+background-color: #80477225;
+}
 

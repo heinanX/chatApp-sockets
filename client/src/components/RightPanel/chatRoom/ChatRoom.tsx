@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { useSocket } from "../../../Context/SocketContext/SocketContext"
 import "./ChatRoom.css"
-import ChatRoomHeader from "./chatRoomHeader/ChatRoomHeader";
-import ChatRoomBody from "./chatRoomBody/ChatRoomBody";
+import ChatRoomHeader from "./ChatRoomHeader/ChatRoomHeader";
 import { IRoomMessage } from "../../../utils/interfaces";
-import ChatRoomFooter from "./chatRoomFooter/ChatRoomFooter";
-
+import ChatRoomFooter from "./ChatRoomFooter/ChatRoomFooter";
+import ChatroomBody from "./ChatroomBody/ChatroomBody";
+import "../../../../assets/lobby.png"
 
 function ChatRoom() {
 

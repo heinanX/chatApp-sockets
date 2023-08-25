@@ -1,33 +1,39 @@
 .logIn--div {
     background-color: rgba(240, 248, 255, 0.82);
-    width: 50%;
-    height: 50%;
-    /* opacity: 0.82; */
-    border-radius: 5px;
+    width: 60%;
+    max-width: 800px;
+    border-radius: 2px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around;
-    /* justify-content: center; */
+    justify-content: space-between;
 
-    padding-top: 2em;
-    padding-bottom: 2em;
+    padding-top: 4em;
+    padding-bottom: 4em;
     box-shadow: 2px 5px 2px rgba(70, 48, 70, 0.358);
 }
 
-.logIn--div > h1 {
-    font-size: 40pt;
+.logIn--div > img {
+    width: 350px;
 }
+
+.logIn--div > p {
+    color: #5b3f65;
+    padding-bottom: 2em;
+}
+
 .logIn--div > div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 20px;
 }
 
 .user--input {
     height: 2.5em;
+    width: 250px;
+    outline: none;
     border: none;
     border-bottom: 2px solid purple;
     border-left: 2px solid purple;
@@ -37,22 +43,43 @@
 }
 
 .enter--btn {
-    background-color: #895e98;
-    /* color: pink; */
+    background-color: #8b84c3;
+    color: rgb(255, 255, 255);
     height: 3em;
     width: 10rem;
-    margin-top: 1rem;
     border-radius: 10px;
     border: none;
 }
 
 .enter--btn:hover {
-    background-color: #6d4b79;
+    background-color: #5b3f65;
 }
+
+/* --------------- MEDIAQUERYS FOR SQREENS WITH MAX WIDTH 1200PX  ---------------  */
 
 @media only screen and (max-width: 1200px) {
-    .logIn--div > h1 {
-        font-size: 30pt;
+
+    .logIn--div {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+    }
+}
+
+/* --------------- MEDIAQUERYS FOR SQREENS WITH MAX WIDTH 980PX  ---------------  */
+@media only screen and (max-width: 980px) {
+    .logIn--div {
+        width: 70%;
+    }
+}
+
+/* --------------- MEDIAQUERYS FOR SQREENS WITH MAX WIDTH 768PX  ---------------  */
+@media only screen and (max-width: 768px) {
+    .logIn--div > img {
+        width: 300px;
+    }
+
+    .user--input {
+        width: 200px;
     }
 
     .logIn--div {
@@ -60,13 +87,26 @@
         padding-bottom: 5rem;
     }
 }
-@media only screen and (max-width: 700px) {
-    .logIn--div > h1 {
-        font-size: 80%;
+
+/* --------------- MEDIAQUERYS FOR SQREENS WITH MAX WIDTH 480PX  ---------------  */
+@media only screen and (max-width: 480px) {
+    .logIn--div {
+        background-color: rgba(240, 248, 255, 0.9);
+        position: relative;
+        justify-content: center;
+        height: 50%;
     }
 
-    .logIn--div {
-        padding-top: 5rem;
-        padding-bottom: 5rem;
+    .logIn--div > img {
+        width: 200px;
     }
+
+    .logIn--div > p {
+        max-width: 60%;
+        text-align: center;
+        font-size: 12pt;
+    }
+
+
+
 }
