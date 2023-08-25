@@ -1,6 +1,8 @@
 export interface IRoomMessage {
   room: string;
   message: string;
+  username: string; // Lägger till namnet på avsändaren
+  timestamp: string; // lägger till tiden då medelandet skickades
 }
 
 export interface IChatRoomProps {

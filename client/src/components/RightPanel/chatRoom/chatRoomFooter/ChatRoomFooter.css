@@ -1,15 +1,41 @@
-.chatroom-low{
+.chatroom-footer {
     height: 10%;
-    border-radius: 5px;
+    width: 100%;
+    border-radius: 2px;
     color: darkblue;
-    text-align: left;
     padding: 5px;
 }
 
-.chatroom-low input{
-    border-radius: 5px;
+.footerContent {
+    padding-top: 5px;
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.footerContent input{
+    height: 80%;
+    width: 80%;
     color: darkblue;
+
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    box-shadow: 1px 1px 5px 1px rgba(89, 0, 255, 0.2);
+    
     text-align: left;
-    align-self: baseline;
-    width: 90%;
+    padding: 2px 10px;
+}
+
+.footerContent button {
+    width: 3em;
+    height: 3em;
+    border-radius: 5em;
+    background-color: #7C83BC;
+    color: white;
+    /* font-weight: ; <---------------- HÄR VAR DU LINDA */ 
+    border: none;
+    padding: 5px;
 }

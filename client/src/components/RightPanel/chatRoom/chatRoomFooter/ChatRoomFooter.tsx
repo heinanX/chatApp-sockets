@@ -1,30 +1,34 @@
 
 import { useSocket } from "../../../../Context/SocketContext/SocketContext"
-import { IChatRoomProps } from "../../../../utils/interfaces";
+// import { IChatRoomProps } from "../../../../utils/interfaces";  // Används inte
 import "./ChatRoomFooter.css"
 import { useState } from "react";
 
-function ChatRoomFooter({ roomName }: IChatRoomProps) {
+function ChatRoomFooter(/*{ roomName }: IChatRoomProps*/) { // roomName Används inte
 
-    const { currentRoom, sendMessage } = useSocket()
+    const { currentRoom, sendMessage, username } = useSocket()
 
     const [message, setMessage] = useState('');
-    const [roomMessages, setRoomMessages] = useState<string[]>([]);
+    // const [roomMessages, setRoomMessages] = useState<string[]>([]); // Används inte
+
+    const timestamp = new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes()  // < --- Tid för meddelandet
 
     const handleSendMessage = () => {
         const room = currentRoom ? currentRoom : "Lobby";
-        (message.trim() !== '') && sendMessage({message: message.trim(), room: room})
+        (message.trim() !== '') && sendMessage({message: message.trim(), room: room, username: username, timestamp: timestamp})
         setMessage('');
       };
 
     return (
-        <div className="chatroom-low">
-            <input
-                type="text"
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-            />
-            <button onClick={handleSendMessage}>Send</button>
+        <div className="chatroom-footer">
+            <div className="footerContent">
+                <input
+                    type="text"
+                    value={message}
+                    onChange={e => setMessage(e.target.value)}
+                />
+                <button onClick={handleSendMessage}>→</button>
+            </div>
         </div>
     )
 }

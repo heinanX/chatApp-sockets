@@ -51,8 +51,9 @@ io.on("connection", (socket) => {
 
   // Funktion som tar bort rum/ username från rum, körs i "leave_room" och "disconnect_user"
   const removeRoomInfo = (username, oldRoom) => {
-    if (!oldRoom == "" && username && oldRoom) {
+    if (!oldRoom == "" && roomInfo[oldRoom]) {
       const index = roomInfo[oldRoom].indexOf(username);
+
       if (index != -1) {
         roomInfo[oldRoom].splice(index, 1);
         if (oldRoom != "Lobby" && roomInfo[oldRoom].length === 0) {
@@ -60,7 +61,7 @@ io.on("connection", (socket) => {
         }
       }
     }
-    
+
     // Skickar ny info till clienten
     io.emit("active_rooms", roomInfo);
   };
@@ -68,12 +69,12 @@ io.on("connection", (socket) => {
   // lssnar på "leave_room" på clienten och kör removeRoomInfo funktionen
   socket.on("leave_room", (oldRoom, username) => {
     socket.leave(oldRoom);
-    console.log( username + " with ID: " + socket.id + " left " + oldRoom);
+    console.log(username + " with ID: " + socket.id + " left " + oldRoom);
     removeRoomInfo(username, oldRoom);
   });
-  
+
   // lyssnar på "send_message" på clienten och kör funktionen
-    socket.on('sendMessage', (data) => {
+  socket.on('sendMessage', (data) => {
     io.to(data.room).emit('receiveMessage', data);
   });
 
@@ -81,7 +82,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect_user", (username, oldRoom) => {
     activeUsers.delete(username);
     removeRoomInfo(username, oldRoom);
-    console.log( username + " with ID: " + socket.id + " has disconnected");
+    console.log(username + " with ID: " + socket.id + " has disconnected");
     // disconnectar från socket
     socket.disconnect();
   });

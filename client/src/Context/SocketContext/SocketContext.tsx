@@ -24,9 +24,6 @@ interface SocketContextData {
     messages: IRoomMessage[]
     setMessages: React.Dispatch<React.SetStateAction<IRoomMessage[]>>
     sendMessage: (message: IRoomMessage) => void
-
-   
-
 }
 
 // DEFAULTVALUES
@@ -142,6 +139,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
         joinRoom()
 
         const messageListener = (msg: IRoomMessage) => {
+            console.log(msg);
+            
             setMessages(prevMessages => [...prevMessages, msg]);
             console.log(`message received: ${msg.message} from ${msg.room}`);
             console.log(`length of messages: ${messages.length}`);
@@ -160,6 +159,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const sendMessage = (message: IRoomMessage) => {
         console.log(`Sending message ${message.message} to room ${message.room}`);
         socket.emit("sendMessage", message);
+        
+        
     }
 
     return (
