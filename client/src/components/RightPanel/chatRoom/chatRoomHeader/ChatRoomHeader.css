@@ -1,19 +1,22 @@
-.chatroom-top{
-    height: 5%;
-    border-radius: 5px;
-    border: 3px solid black;
+.chatroom-header {
+    display: flex;
+    align-items: center;
+    height: 10%;
     color: purple;
     font-weight: bold;
-    text-align: center;
-    padding: 5px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
-.exit-chatroom{
-    border: none;
-    font-size: 1.3rem;
-    cursor: pointer;
-    color: hotpink;
+.leaveChatroom--btn {
 
+    padding: 7px;
+    background-color: #895e98;
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.leaveChatroom--btn:hover {
+    background-color: #6d4b79;
 }

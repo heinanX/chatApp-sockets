@@ -1,0 +1,30 @@
+.chatroom-body {
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: darkblue;
+    padding: 5px;
+    align-self: baseline;
+    width: 100%;
+}
+
+.chatroom-body div {
+    width: 45%;
+    height: auto;
+    padding: 10px;
+    border-radius: 20px;
+    margin-top: 5px;
+    
+}
+
+.recipient {
+    align-self: flex-start;
+    background-color: aqua;
+}
+
+.sender {
+    align-self: flex-end;
+    background-color: aliceblue;
+}

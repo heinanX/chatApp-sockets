@@ -4,19 +4,21 @@ import { IChatRoomProps } from "../../../../utils/interfaces"
 
 function ChatRoomHeader({ roomName }: IChatRoomProps) {
 
-    const { leaveRoom, setCurrentRoom, joinRoom, currentRoom, username } = useSocket()
+    const { leaveRoom, setCurrentRoom, currentRoom, username } = useSocket()
 
     const leaveRoomHandler = () => {
         leaveRoom(currentRoom, username)
         setCurrentRoom("Lobby")
-        joinRoom()
     }
+
+    const cond = currentRoom === 'Lobby' ? { backgroundColor: "#7C83BC" } : {};
+    
     return (
-        <div className="chatroom-top">
+        <div className="chatroom-header" style={cond}>
             {roomName}
             {
                 // Vi render ut leave chat-knappen bara om man inte är i lobbyn eftersom vi har en leave lobby-knapp
-                currentRoom !== "Lobby" && <div><button onClick={leaveRoomHandler} className="exit-chatroom">ⓧ</button></div>
+                currentRoom !== "Lobby" && <div><button onClick={leaveRoomHandler} className="leaveChatroom--btn">Leave</button></div>
             }
         </div>
     )
