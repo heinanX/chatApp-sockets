@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSocket } from '../../../../Context/SocketContext/SocketContext';
-import { /*IChatRoomProps,*/ IRoomMessage } from "../../../../utils/interfaces"; // <--- Behövs inte
+import { IRoomMessage } from "../../../../utils/interfaces";
 import "./ChatRoomBody.css";
+import CurrentWriter from "../currentWriter/CurrentWriter";
 
 function ChatRoomBody() {
 
@@ -19,6 +20,7 @@ function ChatRoomBody() {
 
     return (
         <div className="chatroom-body">
+            <CurrentWriter />
             {
                 roomMessages && roomMessages.map((msg, index) => (
                     // messages && messages.map((msg, index) => (
@@ -28,7 +30,7 @@ function ChatRoomBody() {
                     // ...beroende på försändare eller mottagare <-----
                     <div
                         key={index}
-                        className={username == msg.username ? "sender" : "recipient"}> 
+                        className={username == msg.username ? "sender" : "recipient"}>
                         <h4>{msg.username}</h4>
                         <p>
                             {msg.message}

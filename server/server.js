@@ -78,6 +78,14 @@ io.on("connection", (socket) => {
     io.to(data.room).emit('receiveMessage', data);
   });
 
+  socket.on('sendIsTyping', (data) => {
+    io.to(data.room).emit('receiveIsTyping', data);
+  });
+
+  socket.on('sendIsNotTyping', (data) => {
+    io.to(data.room).emit('sendIsNotTyping', data);
+  });
+
   // lssnar på "disconnect_user" på clienten och kör removeRoomInfo funktionen
   socket.on("disconnect_user", (username, oldRoom) => {
     activeUsers.delete(username);
@@ -86,6 +94,8 @@ io.on("connection", (socket) => {
     // disconnectar från socket
     socket.disconnect();
   });
+
+  
 });
 
 server.listen(3000, () => console.log("server is up and running"));
