@@ -24,6 +24,12 @@ interface SocketContextData {
     messages: IRoomMessage[]
     setMessages: React.Dispatch<React.SetStateAction<IRoomMessage[]>>
     sendMessage: (message: IRoomMessage) => void
+    setCurrentWriter: React.Dispatch<React.SetStateAction<string>>
+    currentWriter: string
+    userIsWriting: () => void
+    isWriting: boolean,
+    setIsWriting: React.Dispatch<React.SetStateAction<boolean>>
+
 }
 
 // DEFAULTVALUES
@@ -43,12 +49,16 @@ const defaultValues = {
     setRoomsList: () => { },
     leaveLobby: () => { },
     leaveRoom: () => { },
-
     message: "",
     setMessage: () => { },
     messages: [],
     setMessages: () => { },
     sendMessage: () => { },
+    currentWriter: "",
+    setCurrentWriter: () => { },
+    userIsWriting: () => { },
+    isWriting: false,
+    setIsWriting: () => { }
 }
 
 // Skapar socket Context
@@ -71,10 +81,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const [roomsList, setRoomsList] = useState<[]>([]);
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<IRoomMessage[]>([]);
-
+    const [currentWriter, setCurrentWriter] = useState<string>(""); // <----- sätter currentWriters
+    const [isWriting, setIsWriting] = useState<boolean>(false)
     // Login function för landningssidan som även startar kopplingen till socket
-    const logIn =  () => {
-        
+    const logIn = () => {
+
         if (username) {
             // Connectar till servern
             socket.connect()
@@ -85,10 +96,11 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 if (status === "available") {
                     setIsLoggedIn(true)
                     setCurrentRoom("Lobby")
-                    
+
                 } else {
                     alert('Anvandare redan tagen');
-                }})
+                }
+            })
 
         } else {
             alert("Du måste ha ett namn")
@@ -108,12 +120,12 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
             // Skickar en händelse till servern för att ansluta till det valda rummet
             socket.emit("join_room", currentRoom, username, oldRoom, setOldRoom);
-            
+
             // kopplar på "active_rooms" för att uppdatera rumslistan
             socket.on("active_rooms", (rooms) => {
                 setRoomsList(rooms);
             })
-            
+
         }
     }
 
@@ -130,7 +142,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     }
 
-    const leaveRoom = (oldRoom: string, username: string ) => {
+    const leaveRoom = (oldRoom: string, username: string) => {
         socket.emit("leave_room", oldRoom, username)
     }
 
@@ -140,7 +152,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
         const messageListener = (msg: IRoomMessage) => {
             console.log(msg);
-            
+
             setMessages(prevMessages => [...prevMessages, msg]);
             console.log(`message received: ${msg.message} from ${msg.room}`);
             console.log(`length of messages: ${messages.length}`);
@@ -159,9 +171,26 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const sendMessage = (message: IRoomMessage) => {
         console.log(`Sending message ${message.message} to room ${message.room}`);
         socket.emit("sendMessage", message);
-        
-        
+
+
     }
+
+    const userIsWriting = () => {
+        socket.emit("user_is_writing", username, currentRoom);
+    }
+
+
+
+    const setWriter = (user: string) => {
+        setCurrentWriter(user)
+        console.log("----->>>>>>", currentWriter);
+
+    }
+
+    socket.on("active_writers", setWriter)
+
+
+    if (isWriting == true) userIsWriting()
 
     return (
 
@@ -171,7 +200,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 setUsername,
                 currentRoom,
                 setCurrentRoom,
-                oldRoom, 
+                oldRoom,
                 setOldRoom,
                 isLoggedIn,
                 setIsLoggedIn,
@@ -185,7 +214,12 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 setMessage,
                 messages,
                 setMessages,
-                sendMessage
+                sendMessage,
+                currentWriter,
+                setCurrentWriter,
+                userIsWriting,
+                isWriting,
+                setIsWriting
             }
         }>
             {children}

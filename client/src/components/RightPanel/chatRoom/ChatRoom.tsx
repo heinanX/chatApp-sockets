@@ -3,7 +3,7 @@
 import { useSocket } from "../../../Context/SocketContext/SocketContext"
 // import { IRoomMessage } from "../../../utils/interfaces"; // <--- Behövs inte
 import ChatRoomHeader from "./chatRoomHeader/ChatRoomHeader";
-import ChatRoomBody from "./ChatRoomBody/ChatRoomBody";
+import ChatRoomBody from "./ChatroomBody/ChatRoomBody";
 import ChatRoomFooter from "./chatRoomFooter/ChatRoomFooter";
 import "../../../../assets/lobby.png"
 import "./ChatRoom.css"
@@ -15,7 +15,7 @@ function ChatRoom() {
     const cond = currentRoom == 'Lobby' ? "url(../../../../assets/lobby-opa.png)" : "none"
 
     return (
-        <div className="chatroom" style={{ backgroundImage: cond }}>
+        <div className= {currentRoom == "Lobby" ? "lobby" : "chatroom"} style={{ backgroundImage: cond }}>
             <ChatRoomHeader roomName={currentRoom} />
             <ChatRoomBody
                 // roomName={currentRoom} // <--- Behövs inte
