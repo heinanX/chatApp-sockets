@@ -14,7 +14,7 @@ function ChatRoomFooter(/*{ roomName }: IChatRoomProps*/) { // roomName Används
     const [message, setMessage] = useState('');
     // const [roomMessages, setRoomMessages] = useState<string[]>([]); // Används inte
 
-    const timestamp = new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes()  // < --- Tid för meddelandet
+    const timestamp = String(new Date(Date.now()).getHours()).padStart(2, "0") + ":" + String(new Date(Date.now()).getMinutes()).padStart(2, "0")  // < --- Tid för meddelandet
 
     const handleSendMessage = () => {
         const room = currentRoom ? currentRoom : "Lobby";
