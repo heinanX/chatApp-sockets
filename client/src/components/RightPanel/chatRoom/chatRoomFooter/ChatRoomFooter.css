@@ -4,9 +4,30 @@
     border-radius: 2px;
     color: darkblue;
     padding: 5px;
+    position: relative;
+}
+
+
+.currentWriter {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    top: -18px;
+    left: 4px;
+    padding-left: 20px;
+
+    font-size: smaller;
+    width: 100%;
+    color: rgba(31, 32, 33, 0.7);
+}
+
+.currentWriter p {
+    font-size: 10pt;
 }
 
 .footerContent {
+    bottom: 2px;
+    left: 4px;
     padding-top: 5px;
     height: 90%;
     display: flex;

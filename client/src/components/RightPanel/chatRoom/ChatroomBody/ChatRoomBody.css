@@ -3,16 +3,41 @@
     display: flex;
     flex-direction: column;
     height: 80%;
+    width: 100%;
     border-radius: 2px;
     background-color: rgba(255, 255, 255, 0.483);
     color: darkblue;
     padding: 5px;
     align-self: baseline;
-    width: 100%;
+    overflow: hidden;
+    transition: 0.3s;
 }
 
+.chatroom-body:hover {
+    overflow: auto;
+}
+
+/*  start of scrollbar css*/
+.chatroom-body::-webkit-scrollbar {
+    width: 10px; /* Width of the scrollbar */
+}
+
+.chatroom-body::-webkit-scrollbar-track {
+    background: transparent; /* Background color of the track */
+}
+
+.chatroom-body::-webkit-scrollbar-thumb {
+    background: #7C83BC; /* Color of the scrollbar handle */
+    border-radius: 10px; /* sets radius */
+}
+
+.chatroom-body::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Color on hover */
+}
+/* end of scrollbar css */
+
 .chatroom-body div {
-    width: 75%;
+    max-width: 75%;
     height: auto;
     padding: 10px;
     border-radius: 20px;
@@ -21,33 +46,32 @@
     
 }
 
+.chatroom-body > div > h6 {
+    font-size: 6pt;
+    padding: 3px 7px;
+}
+
 .recipient {
     align-self: flex-start;
-    background-color: rgb(231, 209, 247);
+}
+.recipientColor {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2px 14px;
+    border-radius: 1em;
 }
 
 .sender {
     align-self: flex-end;
+    text-align: end;
+}
+.senderColor {
     background-color: rgb(219, 236, 251);
+    padding: 2px 14px;
+    border-radius: 1em;
 }
 
-.currentWriter {
-    position: absolute;
-    display: flex;
-    flex-direction: row;
-    bottom: 2px;
-    left: 4px;
-    font-size: smaller;
-    width: 100%;
-    color: rgba(31, 32, 33, 0.7);
-}
 
-.currentWriter p {
-    font-size: 10pt;
-    padding-right: 6px;
-}
 
 .faFaceLaugh {
-
-padding-top: 2px;
+    padding-top: 2px;
 }

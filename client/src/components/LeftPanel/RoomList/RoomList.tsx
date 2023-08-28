@@ -1,12 +1,7 @@
-import { useEffect } from 'react';
 import { useSocket } from '../../../Context/SocketContext/SocketContext';
 //renderar ut alla rum i listan och sätter onClick på dom
 const RoomList = () => {
   const { roomsList, setCurrentRoom, currentRoom } = useSocket();
- //currentRoom, setCurrentRoom, 
- useEffect(() => {
-  console.log('this is from component 2',roomsList);
-}, [roomsList]);
 
 
   return (
