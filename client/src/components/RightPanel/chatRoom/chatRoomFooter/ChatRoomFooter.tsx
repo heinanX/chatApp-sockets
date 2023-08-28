@@ -2,11 +2,11 @@
 import { useSocket } from "../../../../Context/SocketContext/SocketContext"
 // import { IChatRoomProps } from "../../../../utils/interfaces";  // Används inte
 import "./ChatRoomFooter.css"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function ChatRoomFooter(/*{ roomName }: IChatRoomProps*/) { // roomName Används inte
 
-    const { currentRoom, sendMessage, username } = useSocket()
+    const { currentRoom, sendMessage, username, setIsWriting, setCurrentWriter } = useSocket()
 
     const [message, setMessage] = useState('');
     // const [roomMessages, setRoomMessages] = useState<string[]>([]); // Används inte
@@ -15,9 +15,15 @@ function ChatRoomFooter(/*{ roomName }: IChatRoomProps*/) { // roomName Används
 
     const handleSendMessage = () => {
         const room = currentRoom ? currentRoom : "Lobby";
-        (message.trim() !== '') && sendMessage({message: message.trim(), room: room, username: username, timestamp: timestamp})
+        (message.trim() !== '') && sendMessage({ message: message.trim(), room: room, username: username, timestamp: timestamp })
         setMessage('');
-      };
+    };
+
+    useEffect(() => {
+        if (message != "") {
+            setIsWriting(true)
+        }
+    }, [message])
 
     return (
         <div className="chatroom-footer">
@@ -26,6 +32,10 @@ function ChatRoomFooter(/*{ roomName }: IChatRoomProps*/) { // roomName Används
                     type="text"
                     value={message}
                     onChange={e => setMessage(e.target.value)}
+                    onBlur={() => {
+                        setIsWriting(false)
+                        setCurrentWriter("")
+                    }}
                 />
                 <button onClick={handleSendMessage}>→</button>
             </div>

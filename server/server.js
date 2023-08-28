@@ -75,8 +75,13 @@ io.on("connection", (socket) => {
 
   // lyssnar på "send_message" på clienten och kör funktionen
   socket.on('sendMessage', (data) => {
-    io.to(data.room).emit('receiveMessage', data);
+    io.to(data.room).broadcast.emit('receiveMessage', data);
   });
+
+  socket.on('user_is_writing', (username, room) => {
+    io.to(room).emit("active_writers", username)
+  });
+
 
   // lssnar på "disconnect_user" på clienten och kör removeRoomInfo funktionen
   socket.on("disconnect_user", (username, oldRoom) => {

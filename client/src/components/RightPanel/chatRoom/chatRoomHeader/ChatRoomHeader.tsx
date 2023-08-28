@@ -11,14 +11,14 @@ function ChatRoomHeader({ roomName }: IChatRoomProps) {
         setCurrentRoom("Lobby")
     }
 
-    const cond = currentRoom === 'Lobby' ? { backgroundColor: "#7C83BC" } : {};
+    // const cond = currentRoom === 'Lobby' ? { backgroundColor: "#7C83BC" } : {};
     
     return (
-        <div className="chatroom-header" style={cond}>
+        <div className="chatroom-header" >
             {roomName}
             {
                 // Vi render ut leave chat-knappen bara om man inte är i lobbyn eftersom vi har en leave lobby-knapp
-                currentRoom !== "Lobby" && <div><button onClick={leaveRoomHandler} className="leaveChatroom--btn">Leave</button></div>
+                currentRoom !== "Lobby" && <div onClick={leaveRoomHandler} className="leaveChatroom--btn">x</div>
             }
         </div>
     )
