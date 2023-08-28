@@ -51,7 +51,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const [username, setUsername] = useState<string>("")
     const [currentUser, setCurrentUser] = useState<string>("");
     const [currentRoom, setCurrentRoom] = useState<string>("");
-    const [typingUsersList, setTypingUsersList] = useState<ITypingUser[]>([{ username: "", room: "" }]);
+    const [typingUsersList, setTypingUsersList] = useState<ITypingUser[]>([]);
     const [oldRoom, setOldRoom] = useState<string>("")
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
     const [roomsList, setRoomsList] = useState<[]>([]);

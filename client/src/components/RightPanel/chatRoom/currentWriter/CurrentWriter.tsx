@@ -27,7 +27,7 @@ function CurrentWriter() {
 
   return (
     <div className="typing-indicator">
-      {isTyping.length === 1 && <span>{isTyping[0]?.username} is typing...</span>}
+      {(isTyping.length === 1 ) && (<span>{isTyping[0]?.username} is typing...</span>)}
       {isTyping.length > 1 && <span>{isTyping[0]?.username} and {isTyping.length - 1} more users are typing...</span>}
     </div>
   );

@@ -37,20 +37,7 @@ function ChatRoomFooter() {
             }, 5000)
         }
     }
-    // const sendTyping = () => {
-    //     const typingUser: ITypingUser = { username: username, room: currentRoom }
-    //     let addUser = true;
-    //     typingUsersList.forEach(typedUser => {
-    //         typedUser.username === typingUser.username && (addUser = false)
-    //     })
-    //     if (timer === null) {
-    //         addUser && sendIsTyping(typingUser)
-    //         timer = setTimeout(() => {
-    //             timer = null;
-    //             sendIsNotTyping(typingUser)
-    //         }, 5000)
-    //     }
-    // }
+
     const handleSendMessage = () => {
         (message.message.trim() !== '') && sendMessage(message)
         setMessage({ message: "", room: "" });
