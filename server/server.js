@@ -75,11 +75,11 @@ io.on("connection", (socket) => {
 
   // lyssnar på "send_message" på clienten och kör funktionen
   socket.on('sendMessage', (data) => {
-    io.to(data.room).broadcast.emit('receiveMessage', data);
+    io.to(data.room).emit('receiveMessage', data);
   });
 
   socket.on('user_is_writing', (username, room) => {
-    io.to(room).emit("active_writers", username)
+    socket.broadcast.to(room).emit("active_writers", username)
   });
 
 

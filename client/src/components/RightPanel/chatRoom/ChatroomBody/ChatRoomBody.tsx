@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSocket } from '../../../../Context/SocketContext/SocketContext';
 import { /*IChatRoomProps,*/ IRoomMessage } from "../../../../utils/interfaces"; // <--- Behövs inte
 import "./ChatRoomBody.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconProp } from '@fortawesome/fontawesome-svg-core'
-import { faFaceLaugh } from '@fortawesome/free-solid-svg-icons'
+
 
 function ChatRoomBody() {
 
-    const { currentRoom, messages, username, currentWriter } = useSocket()
+    const { currentRoom, messages, username, setCurrentWriter } = useSocket()
     console.log("messages", messages);
 
     const [roomMessages, setRoomMessages] = useState<IRoomMessage[]>([]);
@@ -20,8 +18,20 @@ function ChatRoomBody() {
         setRoomMessages(wantedRoomMessages);
     }, [messages, currentRoom]);
 
+    const messageContainerRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+      // När roomMessages updateras med en ny meddelande så scrollar den automatiskt till ref. div's botten.
+      if (messageContainerRef.current) {
+        messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      }
+
+      setCurrentWriter('')
+    }, [roomMessages]);
+
+
     return (
-        <div className="chatroom-body">
+        <div className="chatroom-body" ref={messageContainerRef}>
             {
                 roomMessages && roomMessages.map((msg, index) => (
                     // messages && messages.map((msg, index) => (
@@ -32,8 +42,9 @@ function ChatRoomBody() {
                     <div
                         key={index}
                         className={username == msg.username ? "sender" : "recipient"}>
-                        <h4>{msg.username}</h4>
-                        <p>
+                        <h4>{msg.username}:</h4>
+                        <p
+                        className={username == msg.username ? "senderColor" : "recipientColor"}>
                             {msg.message}
                         </p>
                         <h6>{msg.timestamp}</h6>
@@ -41,7 +52,7 @@ function ChatRoomBody() {
                     </div>
                 ))
             }
-            {currentWriter ? <div className="currentWriter"><p>{currentWriter} skriver... </p> <FontAwesomeIcon className="faFaceLaugh" icon={faFaceLaugh as IconProp} bounce /> </div> : <></>}
+            
         </div>
     )
 }
