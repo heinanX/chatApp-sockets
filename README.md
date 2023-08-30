@@ -73,9 +73,6 @@ Skriv sedan `o` i terminalen så öppnas applikationen i din standardwebbläsare
 
 Nu när både servern och klienten är igång kan du använda `Chat DeFudge App` för att skicka och ta emot meddelanden i realtid! Skriv in ditt användarnamn och skapa eller välj en chatt att ansluta till. Du kan öppna flera flikar eller fönster i din webbläsare för att simulera flera användare och se realtidsmeddelandena.
 
-## Anpassning och vidareutveckling
-
-Detta projekt är en grundläggande implementation av en chattapplikation med React, Socket.io och Express. Du kan anpassa och vidareutveckla den genom att lägga till fler funktioner som användarautentisering, möjlighet att skapa privata chattrum, emoji-stöd osv.
 
 
 
