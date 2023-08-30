@@ -1,18 +1,15 @@
 
 import { useSocket } from "../../../../Context/SocketContext/SocketContext"
-// import { IChatRoomProps } from "../../../../utils/interfaces";  // Används inte
 import "./ChatRoomFooter.css"
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { faFaceLaugh } from '@fortawesome/free-solid-svg-icons'
 
-function ChatRoomFooter(/*{ roomName }: IChatRoomProps*/) { // roomName Används inte
+function ChatRoomFooter() {
 
-    const { currentRoom, sendMessage, username, setIsWriting, setCurrentWriter, currentWriter } = useSocket()
-
+    const { currentRoom, sendMessage, username, sendActiveWriter, currentWriters } = useSocket();
     const [message, setMessage] = useState('');
-    // const [roomMessages, setRoomMessages] = useState<string[]>([]); // Används inte
 
     const timestamp = String(new Date(Date.now()).getHours()).padStart(2, "0") + ":" + String(new Date(Date.now()).getMinutes()).padStart(2, "0")  // < --- Tid för meddelandet
 
@@ -22,33 +19,28 @@ function ChatRoomFooter(/*{ roomName }: IChatRoomProps*/) { // roomName Används
         setMessage('');
     };
 
-    const enterKey = (e: React.KeyboardEvent<HTMLDivElement>) => {    
+    const enterKey = (e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key == 'Enter') {
-          handleSendMessage()
-          setIsWriting(false)
-          setCurrentWriter("")
+            handleSendMessage()
         }
     }
 
     useEffect(() => {
-        if (message != "") {
-            setIsWriting(true)
-        }
-    }, [message])
+    }, [message, currentWriters])
 
     return (
         <div className="chatroom-footer">
-            {currentWriter ? <div className="currentWriter"><p>{currentWriter} skriver... </p> <FontAwesomeIcon className="faFaceLaugh" icon={faFaceLaugh as IconProp} bounce /> </div> : <></>}
+            {currentWriters.length === 1 && <div className="currentWriter"><p>{currentWriters[0]?.username} skriver... </p> <FontAwesomeIcon className="faFaceLaugh" icon={faFaceLaugh as IconProp} bounce /> </div>}
+            {currentWriters.length > 1 && <div className="currentWriter"><p>{currentWriters[0]?.username} och {currentWriters.length - 1} till skriver... </p> <FontAwesomeIcon className="faFaceLaugh" icon={faFaceLaugh as IconProp} bounce /> </div>}
             <div className="footerContent">
                 <input
                     type="text"
                     value={message}
-                    onChange={e => setMessage(e.target.value)}
-                    onKeyDown={(e) => enterKey(e)}
-                    onBlur={() => {
-                        setIsWriting(false)
-                        setCurrentWriter("")
+                    onChange={e => {
+                        setMessage(e.target.value)
+                        sendActiveWriter();
                     }}
+                    onKeyDown={(e) => enterKey(e)}
                 />
                 <button onClick={handleSendMessage}>→</button>
             </div>

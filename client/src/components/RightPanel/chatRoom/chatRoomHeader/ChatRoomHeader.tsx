@@ -10,8 +10,6 @@ function ChatRoomHeader({ roomName }: IChatRoomProps) {
         leaveRoom(currentRoom, username)
         setCurrentRoom("Lobby")
     }
-
-    // const cond = currentRoom === 'Lobby' ? { backgroundColor: "#7C83BC" } : {};
     
     return (
         <div className="chatroom-header" >

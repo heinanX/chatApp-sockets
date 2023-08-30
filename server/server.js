@@ -41,7 +41,7 @@ io.on("connection", (socket) => {
     // Om roomName inte finns i roomInfo så skapas roomName med en tom array
     if (!roomInfo[roomName]) roomInfo[roomName] = [];
 
-    // Lägger till username till rummet man ansluter till 
+    // Lägger till username till rummet man ansluter till
     roomInfo[roomName].push(username);
     // sätter oldroom till rumsnamnet man lämnar
     setOldRoom(roomName);
@@ -74,14 +74,21 @@ io.on("connection", (socket) => {
   });
 
   // lyssnar på "send_message" på clienten och kör funktionen
-  socket.on('sendMessage', (data) => {
-    io.to(data.room).emit('receiveMessage', data);
+  socket.on("sendMessage", (messageData) => {
+    io.to(messageData.room).emit("receiveMessage", messageData);
   });
 
-  socket.on('user_is_writing', (username, room) => {
-    socket.broadcast.to(room).emit("active_writers", username)
+  socket.on("activeWriter", (currentWriterData) => {
+    socket.broadcast
+      .to(currentWriterData.room)
+      .emit("activeWriter", currentWriterData);
   });
 
+  socket.on("notActiveWriter", (currentWriterData) => {
+    socket.broadcast
+      .to(currentWriterData.room)
+      .emit("notActiveWriter", currentWriterData);
+  });
 
   // lssnar på "disconnect_user" på clienten och kör removeRoomInfo funktionen
   socket.on("disconnect_user", (username, oldRoom) => {
