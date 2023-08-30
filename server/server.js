@@ -12,6 +12,9 @@ const io = new Server(server, {
 
 app.use(cors());
 
+const API_KEY = process.env.REACT_APP_API_KEY;
+console.log(API_KEY);
+
 // skapar ett set med aktiva rum
 const activeRooms = new Set();
 //Lägger in "Lobby" by default

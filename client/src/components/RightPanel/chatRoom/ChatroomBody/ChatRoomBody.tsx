@@ -2,13 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import { useSocket } from '../../../../Context/SocketContext/SocketContext';
 import { /*IChatRoomProps,*/ IRoomMessage } from "../../../../utils/interfaces"; // <--- Behövs inte
 import "./ChatRoomBody.css";
+import GIF from "../../../GIF/GIF";
 
 
 function ChatRoomBody() {
 
     const { currentRoom, messages, username, setCurrentWriter } = useSocket()
-    console.log("messages", messages);
-
+    
     const [roomMessages, setRoomMessages] = useState<IRoomMessage[]>([]);
     useEffect(() => {
         const wantedRoomMessages: IRoomMessage[] = messages ? messages.filter(message => message.room === currentRoom) : []
@@ -45,10 +45,9 @@ function ChatRoomBody() {
                         <h4>{msg.username}:</h4>
                         <p
                         className={username == msg.username ? "senderColor" : "recipientColor"}>
-                            {msg.message}
+                            {msg.message == "/gif" ? <GIF /> : msg.message /* <---- kollar om message == /gif*/} 
                         </p>
                         <h6>{msg.timestamp}</h6>
-
                     </div>
                 ))
             }

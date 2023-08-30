@@ -51,6 +51,13 @@
     padding: 3px 7px;
 }
 
+/* gif (gif ligger i en p tag) och meddelande text */
+.chatroom-body > div > p {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
 .recipient {
     align-self: flex-start;
 }
