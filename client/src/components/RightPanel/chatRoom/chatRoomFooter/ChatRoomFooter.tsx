@@ -8,15 +8,57 @@ import { faFaceLaugh } from '@fortawesome/free-solid-svg-icons'
 
 function ChatRoomFooter() {
 
-    const { currentRoom, sendMessage, username, sendActiveWriter, currentWriters } = useSocket();
+    const { currentRoom, sendMessage, username, sendActiveWriter, currentWriters, apiKey } = useSocket();
     const [message, setMessage] = useState('');
 
     const timestamp = String(new Date(Date.now()).getHours()).padStart(2, "0") + ":" + String(new Date(Date.now()).getMinutes()).padStart(2, "0")  // < --- Tid för meddelandet
 
     const handleSendMessage = () => {
         const room = currentRoom ? currentRoom : "Lobby";
-        (message.trim() !== '') && sendMessage({ message: message.trim(), room: room, username: username, timestamp: timestamp })
-        setMessage('');
+        if (message.includes("/gif")) {
+            
+                // const API_KEY = process.env.REACT_APP_API_KEY;
+                const API_URL = "https://api.giphy.com/v1/gifs/trending";
+            
+                const url = `${API_URL}?api_key=${apiKey}`;
+            
+                const randomIndex = Math.floor(Math.random() * 50); // <------ slumpar ett tal mellan 1 och 50
+            
+               
+                    // hämtar gifs från GIPHY
+            
+                    const fetchGif = async () => {
+                        try {
+                            const res = await fetch(url);
+            
+                            if (!res.ok) {
+                                throw new Error("hämtningen från GIPHY misslyckades");
+                            }
+            
+                            const data = await res.json(); // <----- ger 50 st gifs
+            
+                            console.log(data.data);
+            
+                            const randomGif = await data.data[randomIndex]; // sätter en slumpad gif
+                            
+                            const gif = await randomGif?.images.fixed_height_small.url
+                            console.log("gif i sendmessage: ", gif);
+                            
+                            (message.trim() !== '') && sendMessage({gif: gif, message: message.trim(), room: room, username: username, timestamp: timestamp })
+                            setMessage('');
+            
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    };
+
+                    fetchGif()
+
+        } else {
+            (message.trim() !== '') && sendMessage({gif: undefined, message: message.trim(), room: room, username: username, timestamp: timestamp })
+                            setMessage('');
+        }
+       
     };
 
     const enterKey = (e: React.KeyboardEvent<HTMLDivElement>) => {

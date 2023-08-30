@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const http = require("http"); //http är inbyggt i node
@@ -12,8 +13,7 @@ const io = new Server(server, {
 
 app.use(cors());
 
-const API_KEY = process.env.REACT_APP_API_KEY;
-console.log(API_KEY);
+const API_KEY = process.env.API_KEY;
 
 // skapar ett set med aktiva rum
 const activeRooms = new Set();
@@ -26,6 +26,7 @@ const roomInfo = {};
 
 //connectar client till socket
 io.on("connection", (socket) => {
+  socket.emit("api_key", API_KEY);
   // Kollar om username finns och skickar tillbaka status "available" eller "inUse" till clienten
   socket.on("checkUsername", (username) => {
     if (!activeUsers.has(username)) {
@@ -78,6 +79,7 @@ io.on("connection", (socket) => {
 
   // lyssnar på "send_message" på clienten och kör funktionen
   socket.on("sendMessage", (messageData) => {
+    console.log(messageData);
     io.to(messageData.room).emit("receiveMessage", messageData);
   });
 

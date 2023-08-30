@@ -38,12 +38,12 @@
 
 .chatroom-body div {
     max-width: 75%;
+    min-width: 243px;
     height: auto;
     padding: 10px;
     border-radius: 20px;
     margin-top: 5px;
     word-wrap: break-word;
-    
 }
 
 .chatroom-body > div > h6 {
@@ -52,10 +52,15 @@
 }
 
 /* gif (gif ligger i en p tag) och meddelande text */
-.chatroom-body > div > p {
+.chatroom-body > div > div {
 display: flex;
+flex-direction: column;
 justify-content: center;
 align-items: center;
+}
+.chatroom-body > div > div > p > img {
+padding-top: 7px;
+padding-bottom: 7px;
 }
 
 .recipient {

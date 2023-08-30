@@ -1,6 +1,7 @@
 import { ITypingUser } from "./types";
 
 export interface IRoomMessage {
+  gif: string | undefined
   room: string;
   message: string;
   username: string; // Lägger till namnet på avsändaren
@@ -36,4 +37,7 @@ export interface IChatRoomProps {
     currentWriters: ITypingUser[]
     setCurrentWriters: React.Dispatch<React.SetStateAction<ITypingUser[]>>
     sendActiveWriter: () => void
+    apiKey: string
+ 
+    
 }
