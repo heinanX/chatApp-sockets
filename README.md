@@ -3,7 +3,8 @@ Kurs: Systemstöd och integration med 3-partssystem
 
 # Chat App med React, Socket.io och Express - README
 
-Välkommen till Chat App-projektet! Denna applikation använder sig av React för användargränssnittet, Socket.io för realtidskommunikation och Express som server. Med denna applikation kan användare skicka meddelanden i realtid till varandra i en chattmiljö.
+Välkommen till Chat App-projektet! Denna applikation använder sig av React för användargränssnittet, Socket.io för realtidskommunikation och Express som server. 
+Med denna applikation kan användare skapa ett unikt namn och skicka meddelanden i realtid till varandra i en chattmiljö.
 
 ## Instruktioner för installation och körning
 
