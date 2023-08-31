@@ -10,7 +10,11 @@ const io = new Server(server, {
   },
 });
 
+require('dotenv').config();
+
 app.use(cors());
+
+const API_KEY = process.env.API_KEY;
 
 // skapar ett set med aktiva rum
 const activeRooms = new Set();
@@ -23,6 +27,7 @@ const roomInfo = {};
 
 //connectar client till socket
 io.on("connection", (socket) => {
+  socket.emit("api_key", API_KEY);
   // Kollar om username finns och skickar tillbaka status "available" eller "inUse" till clienten
   socket.on("checkUsername", (username) => {
     if (!activeUsers.has(username)) {

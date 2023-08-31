@@ -1,53 +1,79 @@
-Project name: chatApp
+Project name: chatApp-sockets
 Kurs: Systemstöd och integration med 3-partssystem
 
-Inlämningsuppgift 1:
-1. Användaren får börja med att välja ett eget visningsnamn när den besöker sidan.
-• Input-fält
-• Knapp
-• Instruktioner
+# Chat App med React, Socket.io och Express - README
 
-2. Det ska gå att skapa ett rum (och samtidigt gå med i rummet).
-4. Samtliga rum skall vara synligt i en lista.
-5. De går att gå med i ett rum genom att klicka på det i listan.
-• Lista av rum som är klickbara
-• Instruktioner
+Välkommen till Chat App-projektet! Denna applikation använder sig av React för användargränssnittet, Socket.io för realtidskommunikation och Express som server. Med denna applikation kan användare skicka meddelanden i realtid till varandra i en chattmiljö.
 
-Knapp med plus som har:
-• Inputfält m. placeholder text 'Skapa nytt rum'
-• Knapp
+## Instruktioner för installation och körning
 
-7. Användare ska kunna skicka och läsa nya meddelanden i rummet de har gått med i.
-pop-up som är ett rum:
-• div-för meddelande
-• input
-• knapp
+Följ dessa steg för att hämta och köra projektet lokalt på din dator:
 
-3. Det ska gå att lämna ett rum (tomma rum ska automatiskt försvinna).
-• kryss i högra hörnet
-• if sats room empty = delete
+### Förutsättningar
 
- *om tid = alert(vill du verkligen stänga)
+Innan du börjar måste du se till att följande är installerat på din dator:
 
-6. När en användare går med i ett nytt rum ska befintligt rum lämnas automatiskt.
-• if user in room, leave other room
-
-8. När en användare håller på att skriva ett meddelande skall det synas för alla andra i rummet.
-• tilläggs text om input fältet har text i sig. if-sats.
-
-9. Git & GitHub har använts.
-
-10.Projektmappen innehåller en README.md fil (läs ovan för mer info).
-Fyll i sen
-
-11.Uppgiften lämnas in i tid!
+- [Node.js](https://nodejs.org/)
+- En webbläsare 
 
 
-Krav för väl godkänt:
 
-1.Alla punkter för godkänt är uppfyllda.
+### Steg 1: Klona projektet
 
-2.Varje rum i listan skall även visa vilka användare som finns i rummet.
+Öppna en terminal och navigera till en mapp där du vill placera projektet. Kör sedan följande kommando för att klona projektet från GitHub:
 
-3. Det skall gå att skicka en slumpmässig gif genom att skriva ett kommando.
-T.ex (/gif). Hämta gif från ett tredjeparts API.
+
+git clone https://github.com/heinanX/chatApp-sockets.git
+
+
+
+### Steg 2: Installera dependencies
+
+Öppna en terminal (ctrl + J) och navigera in i server-mappen genom att köra:
+
+- cd server
+
+- Kör sedan följande kommando för att installera de nödvändiga dependencies för servern:
+
+- npm install
+
+
+Öppna en till terminal (ctrl + J) och navigera in i client-mappen genom att köra:
+
+- cd client
+
+- Kör sedan följande kommando för att installera de nödvändiga dependencies för clienten:
+
+- npm install
+
+
+Detta kommer att installera alla dependencies som behövs för både Express-servern och React-klienten.
+
+
+
+### Steg 3: Starta servern och klienten
+
+Använd de två öppna terminalerna och skriv i respektive termenal:
+
+**Terminalfönster 1 (Servern):**
+
+npm start
+
+Servern kommer att köras på port 3000 som standard. Om du vill använda en annan port kan du ändra detta i `server.js`-filen.
+
+**Terminalfönster 2 (Klienten):**
+
+npm run dev
+
+Skriv sedan `o` i terminalen så öppnas applikationen i din standardwebbläsare på http://localhost:5173/ (alt. klicka på länken medans du håller ner `ctrl`-knappen)
+
+
+
+### Steg 4: Använd Chat App
+
+Nu när både servern och klienten är igång kan du använda `Chat DeFudge App` för att skicka och ta emot meddelanden i realtid! Skriv in ditt användarnamn och skapa eller välj en chatt att ansluta till. Du kan öppna flera flikar eller fönster i din webbläsare för att simulera flera användare och se realtidsmeddelandena.
+
+
+
+
+Lycka till! 🚀

@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState, useContext, PropsWithChildren } from 'react';
 import { io } from "socket.io-client";
-import { IRoomMessage } from '../../utils/interfaces';
-import { SocketContextData } from '../../utils/interfaces';
+import { SocketContextData, IRoomMessage } from '../../utils/interfaces';
 import { ITypingUser } from '../../utils/types';
 
 // DEFAULTVALUES
@@ -28,6 +27,7 @@ const defaultValues = {
     currentWriters: [],
     setCurrentWriters: () => { },
     sendActiveWriter: () => { },
+    apiKey: "",
 }
 
 // Skapar socket Context
@@ -39,7 +39,7 @@ const socket = io("http://localhost:3000", { autoConnect: false });
 // Krok för att använda context functionerna och variablerna i alla commponenter
 export const useSocket = () => useContext(SocketContext)
 
-let timer: number | null = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
 
 // SOCKETPROVIDER
 export function SocketProvider({ children }: PropsWithChildren) {
@@ -53,7 +53,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const [message, setMessage] = useState<string>("");
     const [messages, setMessages] = useState<IRoomMessage[]>([]);
     const [currentWriters, setCurrentWriters] = useState<ITypingUser[]>([]); // <----- sätter currentWriters
-
+    const [apiKey, setApiKey] = useState<string>("")
+ 
     // Listeners
     const activeWriterListener = (isTyping: ITypingUser) => {
         const newArr = Array.from(currentWriters)
@@ -123,6 +124,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
         }
     }
 
+
     // LeavLobbyfunktionen som körs från commponenten LeaveLobbyBtn
     const leaveLobby = () => {
         //socket.disconnect()
@@ -131,8 +133,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
             setRoomsList(rooms);
         })
         setIsLoggedIn(false)
-        console.log("Hej då!");
         setCurrentRoom("")
+        setUsername("")
 
     }
 
@@ -158,6 +160,10 @@ export function SocketProvider({ children }: PropsWithChildren) {
         socket.emit("notActiveWriter", { username: username, room: currentRoom });
     }
 
+    socket.on("api_key", (apiKey) => {
+        setApiKey(apiKey)
+    })
+
     // kör joinRoom() när currentRoom sätts
     useEffect(() => {
         joinRoom();
@@ -177,6 +183,15 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.off('notActiveWriter', notActiveWriterListener);
         };
     }, [currentWriters, messages]);
+
+    // lämnar rum när webbläsarfönstret laddas om eftersom rummet ligger kvar fast sidan kräver att man anger användarnamn igen... 
+    window.onunload = ()=>{
+        leaveLobby()
+    }   
+
+
+
+    
 
     return (
         <SocketContext.Provider value={
@@ -203,6 +218,8 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 currentWriters,
                 setCurrentWriters,
                 sendActiveWriter,
+                apiKey,
+                
             }
         }>
             {children}
