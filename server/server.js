@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const http = require("http"); //http är inbyggt i node
@@ -10,6 +9,8 @@ const io = new Server(server, {
     origin: "*",
   },
 });
+
+require('dotenv').config();
 
 app.use(cors());
 
@@ -79,7 +80,6 @@ io.on("connection", (socket) => {
 
   // lyssnar på "send_message" på clienten och kör funktionen
   socket.on("sendMessage", (messageData) => {
-    console.log(messageData);
     io.to(messageData.room).emit("receiveMessage", messageData);
   });
 

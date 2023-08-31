@@ -19,7 +19,6 @@ function ChatRoomBody() {
     const messageContainerRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        console.log(messageContainerRef);
         
         // När roomMessages updateras med en ny meddelande så scrollar den automatiskt till ref. div's botten.
         if (messageContainerRef.current) {

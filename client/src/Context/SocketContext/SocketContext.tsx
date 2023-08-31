@@ -133,7 +133,6 @@ export function SocketProvider({ children }: PropsWithChildren) {
             setRoomsList(rooms);
         })
         setIsLoggedIn(false)
-        console.log("Hej då!");
         setCurrentRoom("")
 
     }
@@ -183,6 +182,15 @@ export function SocketProvider({ children }: PropsWithChildren) {
             socket.off('notActiveWriter', notActiveWriterListener);
         };
     }, [currentWriters, messages]);
+
+    // lämnar rum när webbläsarfönstret laddas om eftersom rummet ligger kvar fast sidan kräver att man anger användarnamn igen... 
+    window.onunload = ()=>{
+        leaveLobby()
+    }   
+
+
+
+    
 
     return (
         <SocketContext.Provider value={
