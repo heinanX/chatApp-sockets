@@ -134,6 +134,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
         })
         setIsLoggedIn(false)
         setCurrentRoom("")
+        setUsername("")
 
     }
 
