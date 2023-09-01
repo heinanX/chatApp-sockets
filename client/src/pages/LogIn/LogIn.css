@@ -55,6 +55,33 @@
     background-color: #5b3f65;
 }
 
+
+dialog {
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    top: 30%;
+    left: 50%;
+    z-index: 500;
+  }
+  
+  dialog div {
+    margin-bottom: 15px;
+  }
+  
+  dialog button {
+    width: 100% !important;
+    background-color: #007bff;
+    color: purple;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
 /* --------------- MEDIAQUERYS FOR SQREENS WITH MAX WIDTH 1200PX  ---------------  */
 
 @media only screen and (max-width: 1200px) {

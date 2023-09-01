@@ -38,6 +38,6 @@ export interface IChatRoomProps {
     setCurrentWriters: React.Dispatch<React.SetStateAction<ITypingUser[]>>
     sendActiveWriter: () => void
     apiKey: string
- 
+    usernameStatus: string
     
 }

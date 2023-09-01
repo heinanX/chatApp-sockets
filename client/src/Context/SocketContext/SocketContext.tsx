@@ -28,6 +28,7 @@ const defaultValues = {
     setCurrentWriters: () => { },
     sendActiveWriter: () => { },
     apiKey: "",
+    usernameStatus: "",
 }
 
 // Skapar socket Context
@@ -54,6 +55,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
     const [messages, setMessages] = useState<IRoomMessage[]>([]);
     const [currentWriters, setCurrentWriters] = useState<ITypingUser[]>([]); // <----- sätter currentWriters
     const [apiKey, setApiKey] = useState<string>("")
+    const [usernameStatus, setUsernameStatus] = useState<string>("")
  
     // Listeners
     const activeWriterListener = (isTyping: ITypingUser) => {
@@ -93,14 +95,15 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 if (status === "available") {
                     setIsLoggedIn(true)
                     setCurrentRoom("Lobby")
+                    setUsernameStatus(status)
 
                 } else {
-                    alert('Anvandare redan tagen');
+                    setUsernameStatus('Användare redan tagen');
                 }
             })
 
         } else {
-            alert("Du måste ha ett namn")
+            setUsernameStatus("Du måste ha ett namn")
         }
     }
     // tidigare createRoom, nu joinroom, då createroom inte behövs eftersom man joinar när man skapar ett rum)
@@ -220,7 +223,7 @@ export function SocketProvider({ children }: PropsWithChildren) {
                 setCurrentWriters,
                 sendActiveWriter,
                 apiKey,
-                
+                usernameStatus
             }
         }>
             {children}
