@@ -9,7 +9,8 @@
     color: darkblue;
     padding: 5px;
     align-self: baseline;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     transition: 0.3s;
 }
 

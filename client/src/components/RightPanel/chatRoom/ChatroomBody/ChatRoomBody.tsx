@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useSocket } from "../../../../Context/SocketContext/SocketContext";
 import { IRoomMessage } from "../../../../utils/interfaces";
 import "./ChatRoomBody.css";
+import { motion } from "framer-motion";
 
 function ChatRoomBody() {
   const { currentRoom, messages, username } = useSocket();
@@ -32,9 +33,23 @@ function ChatRoomBody() {
           // Lagt till username och timestamp i chatRoomBody-displayen <--------
           // Classnamnet på meddelandet blir sender/recipient... <-----
           // ...beroende på försändare eller mottagare <-----
-          <div
+          <motion.div
             key={index}
             className={username == msg.username ? "sender" : "recipient"}
+            initial={{ opacity: 0, x: username == msg.username ? 90 : -90 }}
+            whileInView={{
+              opacity: 1,
+              x: 0,
+              transition: {
+                type: "spring",
+                bounce: 0.7,
+                duration: 1,
+                stiffness: 300,
+              },
+            }}
+            exit={{ opacity: 0, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
           >
             <h4>{msg.username}:</h4>
             <div
@@ -52,7 +67,7 @@ function ChatRoomBody() {
             </div>
 
             <h6>{msg.timestamp}</h6>
-          </div>
+          </motion.div>
         ))}
     </div>
   );
